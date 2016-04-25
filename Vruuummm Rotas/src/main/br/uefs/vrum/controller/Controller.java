@@ -8,17 +8,17 @@ public class Controller {
 
 	Grafo grafo = new Grafo();
 	
-	public void adicionarVertice(String local){
+	public void adicionarPonto(String local){
 		Vertice vertice = new Vertice(local);
 		grafo.adicionarVertice(vertice);
 	}
 	
-	public void adicionarAresta(Vertice verticeOrigem, Vertice verticeDestino,double tempo){
+	public void adicionarCaminho(Vertice verticeOrigem, Vertice verticeDestino,double tempo){
 		Aresta aresta = new Aresta(verticeOrigem,verticeDestino,tempo);
 		grafo.adicionarAresta(aresta);
 	}
 	
-	public Vertice recuperarVertice(String nomeVertice) throws verticeInexistenteException{
+	public Vertice recuperarPonto(String nomeVertice) throws verticeInexistenteException{
 		Vertice procurado = grafo.recuperarVertice(nomeVertice);
 		if(procurado !=null){
 			return procurado;
@@ -26,10 +26,10 @@ public class Controller {
 		throw new verticeInexistenteException();
 	}
 	
-	public Aresta recuperarAresta(String nomeOrigem, String nomeDestino) throws verticeInexistenteException, arestaInexistenteException{
+	public Aresta recuperarCaminho(String nomeOrigem, String nomeDestino) throws verticeInexistenteException, arestaInexistenteException{
 		
-		Vertice origem = recuperarVertice(nomeOrigem);
-		Vertice destino = recuperarVertice(nomeDestino);
+		Vertice origem = recuperarPonto(nomeOrigem);
+		Vertice destino = recuperarPonto(nomeDestino);
 		
 		Aresta procurada = grafo.recuperarAresta(origem,destino);
 		if(procurada !=null){
@@ -43,12 +43,12 @@ public class Controller {
 	}
 	
 	public void removerVertice(String nomeVertice) throws verticeInexistenteException{
-		Vertice aRemover = recuperarVertice(nomeVertice);
+		Vertice aRemover = recuperarPonto(nomeVertice);
 		grafo.removerVertice(aRemover);
 	}
 	
-	public void removerAresta(String nomeOrigem, String nomeDestino) throws verticeInexistenteException, arestaInexistenteException{
-		Aresta aRemover = recuperarAresta(nomeOrigem,nomeDestino);
+	public void removerCaminho(String nomeOrigem, String nomeDestino) throws verticeInexistenteException, arestaInexistenteException{
+		Aresta aRemover = recuperarCaminho(nomeOrigem,nomeDestino);
 		grafo.removerAresta(aRemover);
 	}
 }

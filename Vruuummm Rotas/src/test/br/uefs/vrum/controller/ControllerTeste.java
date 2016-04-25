@@ -17,10 +17,10 @@ public class ControllerTeste {
 	}
 	@Test
 	public void adicionarVerticeSucesso(){
-		controller.adicionarVertice("Alameda Slim");
+		controller.adicionarPonto("Alameda Slim");
 		
 		try{
-			controller.recuperarVertice("Alameda Slim");
+			controller.recuperarPonto("Alameda Slim");
 		}catch(verticeInexistenteException e){
 			fail();
 		}
@@ -31,15 +31,15 @@ public class ControllerTeste {
 		Vertice verticeOrigem = CriarObjetos.criaVertice("Aurora");
 		Vertice verticeDestino = CriarObjetos.criaVertice("Boreal");
 		
-		controller.adicionarVertice("Aurora");
-		controller.adicionarVertice("Boreal");
+		controller.adicionarPonto("Aurora");
+		controller.adicionarPonto("Boreal");
 		Aresta aresta = CriarObjetos.criaAresta(verticeOrigem, verticeDestino, 10);
 		
-		controller.adicionarAresta(verticeOrigem,verticeDestino,10);
+		controller.adicionarCaminho(verticeOrigem,verticeDestino,10);
 		
 		
 		try{
-			String recebida = controller.recuperarAresta("Aurora","Boreal").getOrigem().getIndice();
+			String recebida = controller.recuperarCaminho("Aurora","Boreal").getOrigem().getIndice();
 			String esperada = aresta.getOrigem().getIndice();
 			assertEquals(esperada,recebida);
 		}catch(verticeInexistenteException e){
@@ -52,10 +52,10 @@ public class ControllerTeste {
 	public void recuperarVerticeSucesso(){
 		
 		Vertice vertice = CriarObjetos.criaVertice("Alameda Slim");
-		controller.adicionarVertice("Alameda Slim");
+		controller.adicionarPonto("Alameda Slim");
 		
 		try{
-			controller.recuperarVertice("Alameda Slim");
+			controller.recuperarPonto("Alameda Slim");
 		}catch(verticeInexistenteException e){
 			fail();
 		}
@@ -67,12 +67,12 @@ public class ControllerTeste {
 		Vertice destino = CriarObjetos.criaVertice("Boreal");
 		Aresta aresta = CriarObjetos.criaAresta(origem, destino, 10);
 		
-		controller.adicionarVertice("Aurora");
-		controller.adicionarVertice("Boreal");
-		controller.adicionarAresta(origem, destino, 10);
+		controller.adicionarPonto("Aurora");
+		controller.adicionarPonto("Boreal");
+		controller.adicionarCaminho(origem, destino, 10);
 		
 		try {
-			String recebida = controller.recuperarAresta("Aurora","Boreal").getOrigem().getIndice();
+			String recebida = controller.recuperarCaminho("Aurora","Boreal").getOrigem().getIndice();
 			String esperada = aresta.getOrigem().getIndice();
 			assertEquals(esperada,recebida);
 		} catch (verticeInexistenteException | arestaInexistenteException e) {
@@ -82,9 +82,9 @@ public class ControllerTeste {
 	@Test
 	public void removerVerticeSucesso(){
 		
-		controller.adicionarVertice("Alameda Slim");
+		controller.adicionarPonto("Alameda Slim");
 		try{
-			controller.recuperarVertice("Alameda Slim");
+			controller.recuperarPonto("Alameda Slim");
 		}catch(verticeInexistenteException e){
 			fail();
 		}
@@ -94,7 +94,7 @@ public class ControllerTeste {
 			fail();
 		}
 		try {
-			controller.recuperarVertice("Alameda Slim");
+			controller.recuperarPonto("Alameda Slim");
 		} catch (verticeInexistenteException e) {
 			assertTrue(true);
 		}
@@ -106,23 +106,23 @@ public class ControllerTeste {
 		Vertice destino = CriarObjetos.criaVertice("Boreal");
 		Aresta aresta = CriarObjetos.criaAresta(origem, destino, 10);
 		
-		controller.adicionarVertice("Aurora");
-		controller.adicionarVertice("Boreal");
-		controller.adicionarAresta(origem, destino, 10);
+		controller.adicionarPonto("Aurora");
+		controller.adicionarPonto("Boreal");
+		controller.adicionarCaminho(origem, destino, 10);
 		
 		try {
-			String recebida = controller.recuperarAresta("Aurora","Boreal").getOrigem().getIndice();
+			String recebida = controller.recuperarCaminho("Aurora","Boreal").getOrigem().getIndice();
 			String esperada = aresta.getOrigem().getIndice();
 		} catch (verticeInexistenteException | arestaInexistenteException e) {
 			fail();
 		}
 		try {
-			controller.removerAresta("Aurora","Boreal");
+			controller.removerCaminho("Aurora","Boreal");
 		} catch (verticeInexistenteException | arestaInexistenteException e) {
 			fail();
 		}
 		try {
-			controller.recuperarAresta("Aurora","Boreal");
+			controller.recuperarCaminho("Aurora","Boreal");
 		} catch (verticeInexistenteException | arestaInexistenteException e) {
 			assertTrue(true);
 		}
