@@ -24,13 +24,12 @@ public class Grafo {
 		Vertice atual = null;
 		while(iterador.hasNext()){
 			atual = (Vertice) iterador.next();
-			if(atual.equals(aresta.getOrigem())){
-				aresta.getOrigem().getListaAdj().add(aresta);
-				break;
+			if(atual.getIndice().equals(aresta.getOrigem().getIndice())){
+				atual.getListaAdj().add(aresta);
 			}
-			if(atual.equals(aresta.getDestino())){
+			if(atual.getIndice().equals(aresta.getDestino().getIndice())){
 				Aresta auxiliar = new Aresta(aresta.getDestino(),aresta.getOrigem(),aresta.getTempo());
-				aresta.getDestino().getListaAdj().add(auxiliar);
+				atual.getListaAdj().add(auxiliar);
 			}
 		}		
 	}
@@ -105,7 +104,7 @@ public class Grafo {
 		Aresta procurada = null;
 		while(iterador.hasNext()){
 			procurada = (Aresta)iterador.next();
-			if(procurada.getOrigem().equals(origem) && procurada.getDestino().equals(destino)){
+			if(procurada.getOrigem().getIndice().equals(origem.getIndice()) && procurada.getDestino().getIndice().equals(destino.getIndice())){
 				return procurada;
 			}
 		}

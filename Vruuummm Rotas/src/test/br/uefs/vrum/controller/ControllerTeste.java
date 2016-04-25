@@ -37,14 +37,16 @@ public class ControllerTeste {
 		
 		controller.adicionarAresta(verticeOrigem,verticeDestino,10);
 		
+		
 		try{
-			assertEquals(controller.recuperarAresta("Aurora","Boreal"),aresta);
+			String recebida = controller.recuperarAresta("Aurora","Boreal").getOrigem().getIndice();
+			String esperada = aresta.getOrigem().getIndice();
+			assertEquals(esperada,recebida);
 		}catch(verticeInexistenteException e){
 			fail();
 		} catch (arestaInexistenteException e) {
 			fail();
 		}
-		
 	}
 	@Test
 	public void recuperarVerticeSucesso(){
