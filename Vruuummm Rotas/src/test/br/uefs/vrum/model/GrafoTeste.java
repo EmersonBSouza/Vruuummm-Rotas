@@ -31,6 +31,8 @@ public class GrafoTeste {
 		Vertice novoVertice1 = CriarObjetos.criaVertice("Terra do Nunca");
 		Vertice novoVertice2 = CriarObjetos.criaVertice("Narnia");
 		Aresta novaAresta = CriarObjetos.criaAresta(novoVertice1, novoVertice2, 8);
+		grafo.adicionarVertice(novoVertice1);
+		grafo.adicionarVertice(novoVertice2);
 		grafo.adicionarAresta(novaAresta);
 		
 		assertEquals(novaAresta, grafo.recuperarAresta(novoVertice1, novoVertice2));
@@ -80,6 +82,8 @@ public class GrafoTeste {
 		Vertice novoVertice2 = CriarObjetos.criaVertice("Hogsmead");
 		
 		Aresta novaAresta = CriarObjetos.criaAresta(novoVertice1, novoVertice2, 7);
+		grafo.adicionarVertice(novoVertice1);
+		grafo.adicionarVertice(novoVertice2);
 		grafo.adicionarAresta(novaAresta);
 		Aresta arestaRecuperada = grafo.recuperarAresta(novoVertice1, novoVertice2);
 		
