@@ -1,8 +1,11 @@
 package br.uefs.vrum.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import br.uefs.vrum.util.Aresta;
 import br.uefs.vrum.util.Vertice;
@@ -10,7 +13,7 @@ import br.uefs.vrum.util.Vertice;
 public class Grafo {
 
 	private List<Vertice> listaVertices;	
-	
+	private double[][] matrizAdj;
 	public Grafo(){
 		setListaVertices(new ArrayList<Vertice>());	
 	}
@@ -109,5 +112,114 @@ public class Grafo {
 			}
 		}
 		return null;
+	}
+	
+	public List<Integer> menorCaminho(Vertice origem, Vertice destino){
+		
+		int partida = listaVertices.indexOf(origem);
+		int chegada = listaVertices.indexOf(destino);
+		
+		matrizAdj = transformaEmMatriz();
+		double custo[] = new double[listaVertices.size()];
+		int[] anterior = new int[listaVertices.size()];
+		List<Integer> naoVisitados = new ArrayList<Integer>();
+		
+		custo[partida]=0;
+		
+		for(int i=0;i<matrizAdj.length;i++){
+			if(i!=partida){
+				custo[i] = Double.MAX_VALUE;
+			}
+			anterior[i] = -1;
+			naoVisitados.add(i);
+		}
+		
+		int indiceVizinhoProximo = 0;
+		while(!naoVisitados.isEmpty()){
+			indiceVizinhoProximo = obterVizinhoProximo(custo, naoVisitados);
+			Iterator iterador = naoVisitados.iterator();
+			int index = 0;
+			while(iterador.hasNext()){
+				if(naoVisitados.get(index)== indiceVizinhoProximo){
+					break;
+				}
+				index++;
+			}
+			
+			naoVisitados.remove(index);
+			List<Integer> vizinhos = encontrarVizinhos(indiceVizinhoProximo);
+			
+			for(Integer vizinho: vizinhos){
+				double custoTotal = custo[indiceVizinhoProximo]+ matrizAdj[indiceVizinhoProximo][vizinho];
+				if(custoTotal<custo[vizinho]){
+					custo[vizinho] = custoTotal;
+					anterior[vizinho] = indiceVizinhoProximo;
+				}
+			}
+			if(indiceVizinhoProximo == chegada){
+				return construirListaMenorCaminho(anterior, indiceVizinhoProximo);
+			}
+		}	
+		return construirListaMenorCaminho(anterior, indiceVizinhoProximo);
+	}
+	
+	public List<Integer> encontrarVizinhos(int vertice){
+		List<Integer> vizinhos = new ArrayList<Integer>();
+		for(int j=0;j < matrizAdj[vertice].length;j++){
+			if(matrizAdj[vertice][j] > 0){
+				vizinhos.add(j);
+			}
+		}
+		return vizinhos;
+	}
+	
+	public int obterVizinhoProximo(double[]custo,List<Integer> naoVisitados){
+		double pesoMinimo = Double.MAX_VALUE;
+		int indiceMinimo = 0;
+		
+		for(Integer i:naoVisitados){
+			if(custo[i] < pesoMinimo){
+				pesoMinimo = custo[i];
+				indiceMinimo = i;
+			}
+		}
+		return indiceMinimo;
+	}
+	public double[][] transformaEmMatriz(){
+		
+		double[][] matrizAdj = new double[listaVertices.size()][listaVertices.size()];
+		
+		for(int i=0;i<matrizAdj.length;i++){
+			for(int j=0;j<matrizAdj.length;j++){
+				matrizAdj[i][j] = 0;
+				matrizAdj[j][i] = 0;
+			}
+		}
+		
+		for(int i=0;i<listaVertices.size();i++){
+			for(int j=0;j<listaVertices.get(i).getListaAdj().size();j++){
+				Vertice procurado = listaVertices.get(i).getListaAdj().get(j).getDestino();
+				double peso = listaVertices.get(i).getListaAdj().get(j).getTempo();
+				int index = listaVertices.indexOf(procurado);
+				if(i!=j){
+					matrizAdj[i][index] = peso;
+					matrizAdj[index][i] = peso;
+				}		
+			}
+		}
+		
+		return matrizAdj;
+	}
+	
+	public List<Integer> construirListaMenorCaminho(int[] verticesAnteriores,int indiceVizinhoProximo){
+		List<Integer> caminho = new ArrayList<Integer>();
+		caminho.add(indiceVizinhoProximo);
+		
+		while(verticesAnteriores[indiceVizinhoProximo]!=-1){
+			caminho.add(verticesAnteriores[indiceVizinhoProximo]);
+			indiceVizinhoProximo = verticesAnteriores[indiceVizinhoProximo];
+		}
+		Collections.reverse(caminho);
+		return caminho;
 	}
 }

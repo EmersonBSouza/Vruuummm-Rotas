@@ -1,6 +1,9 @@
 package br.uefs.vrum.model;
 
 import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -89,5 +92,50 @@ public class GrafoTeste {
 		
 		assertEquals(novaAresta, arestaRecuperada);
 	}
-
+	
+	@Test
+	public void transformarEmMatriz(){
+		
+		Vertice novoVertice1 = CriarObjetos.criaVertice("Hogwarts");
+		Vertice novoVertice2 = CriarObjetos.criaVertice("Hogsmead");
+		
+		Aresta novaAresta = CriarObjetos.criaAresta(novoVertice1, novoVertice2, 7);
+		grafo.adicionarVertice(novoVertice1);
+		grafo.adicionarVertice(novoVertice2);
+		grafo.adicionarAresta(novaAresta);
+		
+		Vertice novoVertice3 = CriarObjetos.criaVertice("Terra do Nunca");
+		Vertice novoVertice4 = CriarObjetos.criaVertice("Narnia");
+		Aresta novaAresta2 = CriarObjetos.criaAresta(novoVertice3, novoVertice4, 8);
+		grafo.adicionarVertice(novoVertice3);
+		grafo.adicionarVertice(novoVertice4);
+		grafo.adicionarAresta(novaAresta2);
+		
+		Aresta novaAresta3 = CriarObjetos.criaAresta(novoVertice1, novoVertice4, 5);
+		grafo.adicionarAresta(novaAresta3);
+		
+		double[][] matrizRecebida = grafo.transformaEmMatriz();
+	}
+	@Test
+	public void menorCaminho(){
+		
+		Vertice novoVertice1 = CriarObjetos.criaVertice("Hogwarts");
+		Vertice novoVertice2 = CriarObjetos.criaVertice("Hogsmead");
+		Vertice novoVertice3 = CriarObjetos.criaVertice("Terra do Nunca");
+		Vertice novoVertice4 = CriarObjetos.criaVertice("El Dorado");
+		Aresta novaAresta = CriarObjetos.criaAresta(novoVertice1, novoVertice2, 2);
+		Aresta novaAresta2 = CriarObjetos.criaAresta(novoVertice1, novoVertice3, 3);
+		Aresta novaAresta3 = CriarObjetos.criaAresta(novoVertice2, novoVertice4, 4);
+		Aresta novaAresta4 = CriarObjetos.criaAresta(novoVertice3, novoVertice4, 5);
+		grafo.adicionarVertice(novoVertice1);
+		grafo.adicionarVertice(novoVertice2);
+		grafo.adicionarVertice(novoVertice3);
+		grafo.adicionarVertice(novoVertice4);
+		grafo.adicionarAresta(novaAresta);
+		grafo.adicionarAresta(novaAresta2);
+		grafo.adicionarAresta(novaAresta3);
+		grafo.adicionarAresta(novaAresta4);
+	
+		List<Integer> menorCaminho = grafo.menorCaminho(novoVertice1, novoVertice4);
+	}
 }
