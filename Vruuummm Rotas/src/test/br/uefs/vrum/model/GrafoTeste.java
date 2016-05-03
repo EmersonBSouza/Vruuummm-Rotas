@@ -136,6 +136,6 @@ public class GrafoTeste {
 		grafo.adicionarAresta(novaAresta3);
 		grafo.adicionarAresta(novaAresta4);
 	
-		List<Integer> menorCaminho = grafo.menorCaminho(novoVertice1, novoVertice4);
+		double[][]menorCaminho = grafo.FloydWarshall();
 	}
 }

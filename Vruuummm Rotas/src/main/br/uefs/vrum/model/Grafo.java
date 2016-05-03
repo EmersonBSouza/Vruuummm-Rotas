@@ -11,6 +11,9 @@ public class Grafo {
 
 	private List<Vertice> listaVertices;	
 	private double[][] matrizAdj;
+	private int[][] anteriores;
+	List<Trajeto> trajetos = new ArrayList<Trajeto>();
+	
 	public Grafo(){
 		setListaVertices(new ArrayList<Vertice>());	
 	}
@@ -184,12 +187,18 @@ public class Grafo {
 	}
 	public double[][] transformaEmMatriz(){
 		
+		double infinito = Double.POSITIVE_INFINITY;
 		double[][] matrizAdj = new double[listaVertices.size()][listaVertices.size()];
 		
 		for(int i=0;i<matrizAdj.length;i++){
 			for(int j=0;j<matrizAdj.length;j++){
-				matrizAdj[i][j] = 0;
-				matrizAdj[j][i] = 0;
+				matrizAdj[i][j] = infinito;
+				matrizAdj[j][i] = infinito;
+				
+				if(i==j){
+					matrizAdj[i][j] = 0;
+					matrizAdj[j][i] = 0;
+				}		
 			}
 		}
 		
@@ -201,7 +210,7 @@ public class Grafo {
 				if(i!=j){
 					matrizAdj[i][index] = peso;
 					matrizAdj[index][i] = peso;
-				}		
+				} 
 			}
 		}
 		
@@ -218,5 +227,23 @@ public class Grafo {
 		}
 		Collections.reverse(caminho);
 		return caminho;
+	}
+	
+	public double[][] FloydWarshall(){
+		matrizAdj = transformaEmMatriz();
+		double[][] M = matrizAdj;
+		anteriores = new int[M.length][M.length];
+		for (int k = 0; k < M.length; k++) {
+			for (int i = 0; i < M.length; i++) {
+				for (int j = 0; j < M.length; j++) {
+					// to keep track.;
+					if (M[i][k] + M[k][j] < M[i][j]) {
+						M[i][j] = M[i][k] + M[k][j];
+						anteriores[i][j] = k;
+					}
+				}
+			}
+		}
+		return M;
 	}
 }
