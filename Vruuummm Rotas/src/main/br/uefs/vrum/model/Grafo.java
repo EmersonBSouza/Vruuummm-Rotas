@@ -11,8 +11,9 @@ public class Grafo {
 
 	private List<Vertice> listaVertices;	
 	private double[][] matrizAdj;
-	private int[][] anteriores;
+	private List<List<Integer>> anteriorex = new ArrayList<>();
 	List<Trajeto> trajetos = new ArrayList<Trajeto>();
+	List<Trajeto> caminhos = new ArrayList<Trajeto>();
 	
 	public Grafo(){
 		setListaVertices(new ArrayList<Vertice>());	
@@ -114,14 +115,12 @@ public class Grafo {
 		return null;
 	}
 	
-	public List<Integer> menorCaminho(Vertice origem, Vertice destino){
-		
-		int partida = listaVertices.indexOf(origem);
-		int chegada = listaVertices.indexOf(destino);
+	public List<Integer> menorCaminho(int partida,int chegada){
 		
 		matrizAdj = transformaEmMatriz();
 		double custo[] = new double[listaVertices.size()];
-		int[] anterior = new int[listaVertices.size()];
+		//int[] anterior = new int[listaVertices.size()];
+		List<Integer> anterior = new ArrayList<Integer>();
 		List<Integer> naoVisitados = new ArrayList<Integer>();
 		
 		custo[partida]=0;
@@ -130,9 +129,10 @@ public class Grafo {
 			if(i!=partida){
 				custo[i] = Double.MAX_VALUE;
 			}
-			anterior[i] = -1;
+			//anterior[i] = -1;
 			naoVisitados.add(i);
 		}
+		anterior.add(-1);
 		
 		int indiceVizinhoProximo = 0;
 		while(!naoVisitados.isEmpty()){
@@ -151,11 +151,13 @@ public class Grafo {
 			
 			for(Integer vizinho: vizinhos){
 				double custoTotal = custo[indiceVizinhoProximo]+ matrizAdj[indiceVizinhoProximo][vizinho];
-				if(custoTotal<custo[vizinho]){
+				if(custoTotal<=custo[vizinho]){
 					custo[vizinho] = custoTotal;
-					anterior[vizinho] = indiceVizinhoProximo;
+					//anterior[vizinho] = indiceVizinhoProximo;
+					anterior.add(indiceVizinhoProximo);
 				}
 			}
+			
 			if(indiceVizinhoProximo == chegada){
 				return construirListaMenorCaminho(anterior, indiceVizinhoProximo);
 			}
@@ -166,6 +168,7 @@ public class Grafo {
 	public List<Integer> encontrarVizinhos(int vertice){
 		List<Integer> vizinhos = new ArrayList<Integer>();
 		for(int j=0;j < matrizAdj[vertice].length;j++){
+			double valor2 = matrizAdj[vertice][j];
 			if(matrizAdj[vertice][j] > 0){
 				vizinhos.add(j);
 			}
@@ -187,18 +190,12 @@ public class Grafo {
 	}
 	public double[][] transformaEmMatriz(){
 		
-		double infinito = Double.POSITIVE_INFINITY;
 		double[][] matrizAdj = new double[listaVertices.size()][listaVertices.size()];
 		
 		for(int i=0;i<matrizAdj.length;i++){
 			for(int j=0;j<matrizAdj.length;j++){
-				matrizAdj[i][j] = infinito;
-				matrizAdj[j][i] = infinito;
-				
-				if(i==j){
-					matrizAdj[i][j] = 0;
-					matrizAdj[j][i] = 0;
-				}		
+				matrizAdj[i][j] = 0;
+				matrizAdj[j][i] = 0;
 			}
 		}
 		
@@ -217,33 +214,17 @@ public class Grafo {
 		return matrizAdj;
 	}
 	
-	public List<Integer> construirListaMenorCaminho(int[] verticesAnteriores,int indiceVizinhoProximo){
+	
+	
+	public List<Integer> construirListaMenorCaminho(List<Integer> verticesAnteriores,int indiceVizinhoProximo){
 		List<Integer> caminho = new ArrayList<Integer>();
 		caminho.add(indiceVizinhoProximo);
 		
-		while(verticesAnteriores[indiceVizinhoProximo]!=-1){
-			caminho.add(verticesAnteriores[indiceVizinhoProximo]);
-			indiceVizinhoProximo = verticesAnteriores[indiceVizinhoProximo];
-		}
+//		while(verticesAnteriores[indiceVizinhoProximo]!=-1){
+//			caminho.add(verticesAnteriores[indiceVizinhoProximo]);
+//			indiceVizinhoProximo = verticesAnteriores[indiceVizinhoProximo];
+//		}
 		Collections.reverse(caminho);
 		return caminho;
-	}
-	
-	public double[][] FloydWarshall(){
-		matrizAdj = transformaEmMatriz();
-		double[][] M = matrizAdj;
-		anteriores = new int[M.length][M.length];
-		for (int k = 0; k < M.length; k++) {
-			for (int i = 0; i < M.length; i++) {
-				for (int j = 0; j < M.length; j++) {
-					// to keep track.;
-					if (M[i][k] + M[k][j] < M[i][j]) {
-						M[i][j] = M[i][k] + M[k][j];
-						anteriores[i][j] = k;
-					}
-				}
-			}
-		}
-		return M;
 	}
 }

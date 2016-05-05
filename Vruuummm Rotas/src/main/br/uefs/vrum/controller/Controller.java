@@ -38,8 +38,13 @@ public class Controller {
 		throw new arestaInexistenteException();
 	}
 	
-	public void calcularMenorCaminho(){
+	public void calcularMenorCaminho(String nomeOrigem, String nomeDestino) throws verticeInexistenteException{
 		
+		Vertice origem = recuperarPonto(nomeOrigem);
+		Vertice destino = recuperarPonto(nomeDestino);
+		int partida = grafo.getListaVertices().indexOf(origem);
+		int chegada = grafo.getListaVertices().indexOf(destino);
+		grafo.menorCaminho(partida, chegada);
 	}
 	
 	public void removerVertice(String nomeVertice) throws verticeInexistenteException{
