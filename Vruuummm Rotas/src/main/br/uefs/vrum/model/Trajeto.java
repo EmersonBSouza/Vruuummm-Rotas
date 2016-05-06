@@ -3,6 +3,7 @@ package br.uefs.vrum.model;
 public class Trajeto {
 
 	private int origem;
+	private int destino;
 	private double custo;
 	
 	public int getOrigem() {
@@ -10,6 +11,12 @@ public class Trajeto {
 	}
 	public void setOrigem(int origem) {
 		this.origem = origem;
+	}
+	public int getDestino() {
+		return destino;
+	}
+	public void setDestino(int destino) {
+		this.destino = destino;
 	}
 	public double getCusto() {
 		return custo;
