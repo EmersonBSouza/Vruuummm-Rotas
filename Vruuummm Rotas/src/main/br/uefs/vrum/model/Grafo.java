@@ -156,7 +156,6 @@ public class Grafo {
 				double custoTotal = custo[indiceVizinhoProximo]+ matrizAdj[indiceVizinhoProximo][vizinho];
 				if(custoTotal<=custo[vizinho]){
 					custo[vizinho] = custoTotal;
-					//anterior[vizinho] = indiceVizinhoProximo;
 					anterior.add(indiceVizinhoProximo);
 					Trajeto trajeto = new Trajeto();
 					trajeto.setCusto(custo[vizinho]);
@@ -167,7 +166,7 @@ public class Grafo {
 			}
 			
 			if(indiceVizinhoProximo == chegada){
-				return construirListaMenorCaminho(anterior, indiceVizinhoProximo);
+				return construirListaMenorCaminho(new ArrayList<>(),indiceVizinhoProximo);
 			}
 		}	
 		return construirListaMenorCaminho(anterior, indiceVizinhoProximo);
@@ -224,23 +223,24 @@ public class Grafo {
 	
 	
 	
-	public List<Integer> construirListaMenorCaminho(List<Integer> verticesAnteriores,int indiceVizinhoProximo){
-		List<Integer> caminho = new ArrayList<Integer>();
+	public List<Integer> construirListaMenorCaminho(List<Integer> caminho,int indiceVizinhoProximo){
 		
 		if(indiceVizinhoProximo == -1){
 			return caminho;
 		}else{
 			caminho.add(indiceVizinhoProximo);
 			for(Trajeto trajeto:trajetos){
-				Trajeto atual = trajeto;
-				if(atual.getDestino() == indiceVizinhoProximo){
-					indiceVizinhoProximo = atual.getOrigem();
-					construirListaMenorCaminho(verticesAnteriores, indiceVizinhoProximo);
-					caminhos.add(caminho);
+				if(trajeto.getDestino() == indiceVizinhoProximo){
+					construirListaMenorCaminho(new ArrayList<>(caminho), trajeto.getOrigem());
+					if(caminho.get(caminho.size()-1) == trajetos.get(0).getDestino()){
+						caminhos.add(caminho);
+					}
+					
 				}
 			}
 		}
 		Collections.reverse(caminho);
 		return caminho;
+		
 	}
 }
