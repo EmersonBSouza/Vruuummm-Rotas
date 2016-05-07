@@ -30,7 +30,8 @@ public class CoordenadasGUI {
 	public void salvarCoordenadas(int x, int y){
 		JLabel label = new JLabel("Ola");
 		label.setIcon(iconePonto);
-		label.setBounds(x, y, 80, 80);
+		label.setToolTipText("Ola");
+		label.setBounds(x, y, 20, 20);
 		listaCoordenadas.add(label);
 	}
 	

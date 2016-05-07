@@ -10,8 +10,8 @@ import br.uefs.vrum.util.Vertice;
 public class Grafo {
 
 	private List<Vertice> listaVertices;	
-	private double[][] matrizAdj;
-	private List<List<Integer>> caminhos = new ArrayList<>();
+	private double[][] matrizAdjacencia;
+	private List<List<Integer>> menoresCaminhos = new ArrayList<>();
 	List<Trajeto> trajetos = new ArrayList<Trajeto>();
 	public Grafo(){
 		setListaVertices(new ArrayList<Vertice>());	
@@ -115,7 +115,7 @@ public class Grafo {
 	
 	public List<Integer> menorCaminho(int partida,int chegada){
 		
-		matrizAdj = transformaEmMatriz();
+		matrizAdjacencia = transformaEmMatriz();
 		double custo[] = new double[listaVertices.size()];
 		//int[] anterior = new int[listaVertices.size()];
 		List<Integer> anterior = new ArrayList<Integer>();
@@ -123,7 +123,7 @@ public class Grafo {
 		
 		custo[partida]=0;
 		
-		for(int i=0;i<matrizAdj.length;i++){
+		for(int i=0;i<matrizAdjacencia.length;i++){
 			if(i!=partida){
 				custo[i] = Double.MAX_VALUE;
 			}
@@ -153,7 +153,7 @@ public class Grafo {
 			List<Integer> vizinhos = encontrarVizinhos(indiceVizinhoProximo);
 			
 			for(Integer vizinho: vizinhos){
-				double custoTotal = custo[indiceVizinhoProximo]+ matrizAdj[indiceVizinhoProximo][vizinho];
+				double custoTotal = custo[indiceVizinhoProximo]+ matrizAdjacencia[indiceVizinhoProximo][vizinho];
 				if(custoTotal<=custo[vizinho]){
 					custo[vizinho] = custoTotal;
 					anterior.add(indiceVizinhoProximo);
@@ -174,9 +174,9 @@ public class Grafo {
 	
 	public List<Integer> encontrarVizinhos(int vertice){
 		List<Integer> vizinhos = new ArrayList<Integer>();
-		for(int j=0;j < matrizAdj[vertice].length;j++){
-			double valor2 = matrizAdj[vertice][j];
-			if(matrizAdj[vertice][j] > 0){
+		for(int j=0;j < matrizAdjacencia[vertice].length;j++){
+			double valor2 = matrizAdjacencia[vertice][j];
+			if(matrizAdjacencia[vertice][j] > 0){
 				vizinhos.add(j);
 			}
 		}
@@ -223,17 +223,17 @@ public class Grafo {
 	
 	
 	
-	public List<Integer> construirListaMenorCaminho(List<Integer> caminho,int indiceVizinhoProximo){
+	public List<Integer> construirListaMenorCaminho(List<Integer> caminho,int vizinhoMaisProximo){
 		
-		if(indiceVizinhoProximo == -1){
+		if(vizinhoMaisProximo == -1){
 			return caminho;
 		}else{
-			caminho.add(indiceVizinhoProximo);
+			caminho.add(vizinhoMaisProximo);
 			for(Trajeto trajeto:trajetos){
-				if(trajeto.getDestino() == indiceVizinhoProximo){
+				if(trajeto.getDestino() == vizinhoMaisProximo){
 					construirListaMenorCaminho(new ArrayList<>(caminho), trajeto.getOrigem());
 					if(caminho.get(caminho.size()-1) == trajetos.get(0).getDestino()){
-						caminhos.add(caminho);
+						menoresCaminhos.add(caminho);
 					}
 					
 				}

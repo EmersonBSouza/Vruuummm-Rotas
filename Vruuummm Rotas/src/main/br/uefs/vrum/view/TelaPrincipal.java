@@ -1,26 +1,28 @@
 package br.uefs.vrum.view;
 
 import java.awt.Color;
-import java.awt.Font;
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JApplet;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.JButton;
-import javax.swing.JTextPane;
-import javax.swing.JComboBox;
 
 public class TelaPrincipal extends JApplet {
 
@@ -39,19 +41,45 @@ public class TelaPrincipal extends JApplet {
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		
 		getContentPane().setLayout(null);
-		panel.setBackground(new Color(213,131,123));
+		panel.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent arg0) {
+				Point posicaoMouse = getContentPane().getMousePosition();
+				JLabel label = encontrarPonto(posicaoMouse.x,posicaoMouse.y);
+				if(label!=null){
+					getContentPane().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				}else{
+					getContentPane().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				}
+			}
+		});
+		panel.setBackground(new Color(240,240,240));
 		
 		panel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				Point posicaoMouse = getContentPane().getMousePosition();
-				adicionarPontoTela(posicaoMouse.x, posicaoMouse.y);
+				if((arg0.getModifiers() & MouseEvent.BUTTON1_MASK)!=0){
+					Point posicaoMouse = getContentPane().getMousePosition();
+					adicionarPontoTela(posicaoMouse.x, posicaoMouse.y);
+				}else if((arg0.getModifiers() & MouseEvent.BUTTON3_MASK)!=0){
+					Point posicaoMouse = getContentPane().getMousePosition();
+					JLabel label = encontrarPonto(posicaoMouse.x,posicaoMouse.y);
+					if(label!=null){
+						exibirDados(label,label.getText());
+					}
+				}
 			}
 		});
-		panel.setBounds(10, 11, 1120, 685);
+		
+		panel.setBounds(10, 11, 1120, 625);
 		getContentPane().add(panel);
 		
-		panel_1.setBounds(1133, 11, 211, 685);
+		JLabel lblNewLabel = new JLabel("New label");
+		lblNewLabel.setIcon(new ImageIcon(TelaPrincipal.class.getResource("/br/uefs/vrum/view/icone_Ponto.png")));
+		lblNewLabel.setBackground(Color.YELLOW);
+		panel.add(lblNewLabel);
+		
+		panel_1.setBounds(1133, 11, 211, 625);
 		getContentPane().add(panel_1);
 		panel_1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 159, 234), 6, true));
 		panel_1.setLayout(null);
@@ -89,6 +117,7 @@ public class TelaPrincipal extends JApplet {
 		txtpnDefinirEstacionamento.setText("Definir Estacionamento");
 		txtpnDefinirEstacionamento.setBounds(53, 146, 116, 20);
 		txtpnDefinirEstacionamento.setBackground(new Color(240,240,240));
+		txtpnDefinirEstacionamento.setEditable(false);
 		panel_1.add(txtpnDefinirEstacionamento);
 		
 		JComboBox comboBox_2 = new JComboBox();
@@ -98,7 +127,6 @@ public class TelaPrincipal extends JApplet {
 	}
 	
 	public void adicionarPontoTela(int x,int y){
-		
 		coordenadas.salvarCoordenadas(x, y);
 		repaint();
 	}
@@ -109,16 +137,42 @@ public class TelaPrincipal extends JApplet {
 		g2d.setColor(Color.black);
 
 		Iterator<JLabel> iterador = coordenadas.getListaCoordenadas().iterator();
-		java.net.URL url = null;
 		JLabel atual;
 		while(iterador.hasNext()) {
-			Font myFont = new Font ("Comic Sans", 1, 50);
-			g2d.setFont(myFont);
 			atual = (JLabel) iterador.next();
-			url = this.getClass().getResource("icone_Ponto.png");
-			g2d.drawImage(new ImageIcon(url).getImage(), atual.getX(), atual.getY(), null);
-			
-			g2d.drawString(atual.getText(), atual.getX()+15, atual.getY()+60);
+			g2d.drawImage(new ImageIcon(TelaPrincipal.class.getResource("/br/uefs/vrum/view/icone_Ponto.png")).getImage(), atual.getX()-20, atual.getY()-20, null);
+		}
+	}
+	
+	public JLabel encontrarPonto(int x, int y){
+		
+		for(JLabel label:coordenadas.getListaCoordenadas()){
+			if(label.getBounds().getMinX()-20<=x && label.getBounds().getMaxX()+8>=x && label.getBounds().getMinY()-20<=y && label.getBounds().getMaxY()+10>= y){
+				return label;
+			}
+		}
+		return null;
+	}
+	
+	public void exibirDados(JLabel label,String texto){
+		JTextPane j = new JTextPane();
+		j.setText(texto);
+		j.setEditable(false);
+		j.setBounds(label.getX(), label.getY()-40, 126, 25);
+		JOptionPane.showMessageDialog(j, j.getText());
+	}
+	
+	public void cadastrarPonto(){
+		CadastroPonto ponto = new CadastroPonto();
+	}
+	
+	public void init(){
+		try {
+			new TelaPrincipal();
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
