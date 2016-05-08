@@ -452,8 +452,9 @@ public class TelaPrincipal extends JApplet {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JComboBox combo = (JComboBox)e.getSource();
-			List<Vertice> caminho = (List<Vertice>) combo.getSelectedItem();
+			List<Vertice> caminho = (List<Vertice>) cBmenoresCaminhosPonto.getSelectedItem();
+			List<Vertice> caminho2 = (List<Vertice>) cBmenoresCaminhosBanco.getSelectedItem();
+			caminho.addAll(caminho2);
 
 			for(Linha l : linhas)
 				l.setParteDoMenorCaminho(false);
