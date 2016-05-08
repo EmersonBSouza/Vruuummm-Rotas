@@ -71,8 +71,7 @@ public class TelaPrincipal extends JApplet {
 			}
 		});
 		
-		//panel.setBounds(10, 11, 1120, 625);
-		panel.setBounds(10, 11, 620, 625);
+		panel.setBounds(10, 11, 1120, 625);
 		getContentPane().add(panel);
 		
 		JLabel lblNewLabel = new JLabel("New label");
@@ -80,7 +79,7 @@ public class TelaPrincipal extends JApplet {
 		lblNewLabel.setBackground(Color.YELLOW);
 		panel.add(lblNewLabel);
 		
-		//panel_1.setBounds(1133, 11, 211, 625);
+		panel_1.setBounds(1133, 11, 211, 625);
 		getContentPane().add(panel_1);
 		panel_1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 159, 234), 6, true));
 		panel_1.setLayout(null);
@@ -92,38 +91,59 @@ public class TelaPrincipal extends JApplet {
 		btnCalcularMenorRota.setBounds(45, 464, 129, 28);
 		panel_1.add(btnCalcularMenorRota);
 		
-		JTextPane txtpnConfiguraesDeArestas = new JTextPane();
-		txtpnConfiguraesDeArestas.setBackground(new Color(240,240,240));
-		txtpnConfiguraesDeArestas.setText("Configura\u00E7\u00F5es de Arestas");
-		txtpnConfiguraesDeArestas.setBounds(45, 38, 131, 20);
-		txtpnConfiguraesDeArestas.setEditable(false);
-		panel_1.add(txtpnConfiguraesDeArestas);
+		JTextPane txtAdicionarCaminho = new JTextPane();
+		txtAdicionarCaminho.setBackground(new Color(240,240,240));
+		txtAdicionarCaminho.setText("Adicionar Caminho");
+		txtAdicionarCaminho.setBounds(70, 38, 99, 20);
+		txtAdicionarCaminho.setEditable(false);
+		panel_1.add(txtAdicionarCaminho);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setToolTipText("Selecione um ponto da liga\u00E7\u00E3o da rota");
-		comboBox.setBounds(48, 69, 58, 20);
-		panel_1.add(comboBox);
+		JComboBox cBpontoOrigem = new JComboBox();
+		cBpontoOrigem.setToolTipText("Selecione um ponto da liga\u00E7\u00E3o da rota");
+		cBpontoOrigem.setBounds(48, 69, 58, 20);
+		panel_1.add(cBpontoOrigem);
 		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setToolTipText("Selecione um ponto de liga\u00E7\u00E3o da rota");
-		comboBox_1.setBounds(116, 69, 58, 20);
-		panel_1.add(comboBox_1);
+		JComboBox cBpontoDestino = new JComboBox();
+		cBpontoDestino.setToolTipText("Selecione um ponto de liga\u00E7\u00E3o da rota");
+		cBpontoDestino.setBounds(116, 69, 58, 20);
+		panel_1.add(cBpontoDestino);
 		
 		JButton btnAdicionarLigao = new JButton("Adicionar Liga\u00E7\u00E3o");
 		btnAdicionarLigao.setToolTipText("Cria uma liga\u00E7\u00E3o entre dois pontos selecionados");
 		btnAdicionarLigao.setBounds(45, 100, 129, 23);
 		panel_1.add(btnAdicionarLigao);
 		
-		JTextPane txtpnDefinirEstacionamento = new JTextPane();
-		txtpnDefinirEstacionamento.setText("Definir Estacionamento");
-		txtpnDefinirEstacionamento.setBounds(53, 146, 116, 20);
-		txtpnDefinirEstacionamento.setBackground(new Color(240,240,240));
-		txtpnDefinirEstacionamento.setEditable(false);
-		panel_1.add(txtpnDefinirEstacionamento);
+		JTextPane txtDefinirEstacionamento = new JTextPane();
+		txtDefinirEstacionamento.setText("Definir Estacionamento");
+		txtDefinirEstacionamento.setBounds(53, 146, 116, 20);
+		txtDefinirEstacionamento.setBackground(new Color(240,240,240));
+		txtDefinirEstacionamento.setEditable(false);
+		panel_1.add(txtDefinirEstacionamento);
 		
-		JComboBox comboBox_2 = new JComboBox();
-		comboBox_2.setBounds(96, 177, 38, 20);
-		panel_1.add(comboBox_2);
+		JComboBox cBdefinirEstacionamento = new JComboBox();
+		cBdefinirEstacionamento.setBounds(96, 177, 38, 20);
+		panel_1.add(cBdefinirEstacionamento);
+		
+		JTextPane txtDefinirPontoColeta = new JTextPane();
+		txtDefinirPontoColeta.setEditable(false);
+		txtDefinirPontoColeta.setText("Definir Ponto de Coleta");
+		txtDefinirPontoColeta.setBackground(new Color(240,240,240));
+		txtDefinirPontoColeta.setBounds(56, 222, 120, 20);
+		panel_1.add(txtDefinirPontoColeta);
+		
+		JComboBox cBdefinirPontoColeta = new JComboBox();
+		cBdefinirPontoColeta.setBounds(96, 258, 38, 20);
+		panel_1.add(cBdefinirPontoColeta);
+		
+		JTextPane txtpnDefinirBanco = new JTextPane();
+		txtpnDefinirBanco.setText("Definir Banco");
+		txtpnDefinirBanco.setBackground(new Color(240,240,240));
+		txtpnDefinirBanco.setBounds(82, 302, 78, 20);
+		panel_1.add(txtpnDefinirBanco);
+		
+		JComboBox cBdefinirBanco = new JComboBox();
+		cBdefinirBanco.setBounds(96, 343, 38, 20);
+		panel_1.add(cBdefinirBanco);
 		setSize(Toolkit.getDefaultToolkit().getScreenSize().width-10,Toolkit.getDefaultToolkit().getScreenSize().height-50);
 	}
 	
