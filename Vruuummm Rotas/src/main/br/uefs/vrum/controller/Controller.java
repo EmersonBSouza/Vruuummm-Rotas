@@ -8,9 +8,10 @@ public class Controller {
 
 	private Grafo grafo = new Grafo();
 	
-	public void adicionarPonto(String local){
+	public Vertice adicionarPonto(String local){
 		Vertice vertice = new Vertice(local);
 		grafo.adicionarVertice(vertice);
+		return vertice;
 	}
 	
 	public void adicionarCaminho(Vertice verticeOrigem, Vertice verticeDestino,double tempo){

@@ -29,11 +29,21 @@ import br.uefs.vrum.util.Vertice;
 
 public class TelaPrincipal extends JApplet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	public CoordenadasGUI coordenadas = CoordenadasGUI.getInstance();
 	public List<JLabel> vertices = new ArrayList<JLabel>();
 	Controller controller = new Controller();
 	JPanel panel = new JPanel();
 	public JPanel panel_1 = new JPanel();
+	JComboBox<Vertice> cBpontoOrigem;
+	JComboBox<Vertice> cBpontoDestino;
+	JComboBox<Vertice> cBdefinirEstacionamento;
+	JComboBox<Vertice> cBdefinirBanco;
+	
 	/**
 	 * Create the applet.
 	 * @throws UnsupportedLookAndFeelException 
@@ -67,7 +77,11 @@ public class TelaPrincipal extends JApplet {
 					String nome = JOptionPane.showInputDialog("Insira o nome do novo local:");
 					if(nome != null) {
 					adicionarPontoTela(posicaoMouse.x, posicaoMouse.y);
-					controller.adicionarPonto(nome);
+					Vertice novoPonto = controller.adicionarPonto(nome);
+					cBpontoOrigem.addItem(novoPonto);
+					cBpontoDestino.addItem(novoPonto);
+					cBdefinirEstacionamento.addItem(novoPonto);
+					cBdefinirBanco.addItem(novoPonto);
 					}
 				}else if((arg0.getModifiers() & MouseEvent.BUTTON3_MASK)!=0){
 					Point posicaoMouse = getContentPane().getMousePosition();
@@ -109,12 +123,12 @@ public class TelaPrincipal extends JApplet {
 		List<Vertice> vertices = controller.getGrafo().getListaVertices();
 		Vertice[] locais = (Vertice[]) vertices.toArray(new Vertice[vertices.size()]);
 		
-		JComboBox<Vertice> cBpontoOrigem = new JComboBox<Vertice>(locais);
+		cBpontoOrigem = new JComboBox<Vertice>(locais);
 		cBpontoOrigem.setToolTipText("Selecione um ponto da liga\u00E7\u00E3o da rota");
 		cBpontoOrigem.setBounds(48, 69, 58, 20);
 		panel_1.add(cBpontoOrigem);
 		
-		JComboBox<Vertice> cBpontoDestino = new JComboBox<Vertice>(locais);
+		cBpontoDestino = new JComboBox<Vertice>(locais);
 		cBpontoDestino.setToolTipText("Selecione um ponto de liga\u00E7\u00E3o da rota");
 		cBpontoDestino.setBounds(116, 69, 58, 20);
 		panel_1.add(cBpontoDestino);
@@ -131,7 +145,7 @@ public class TelaPrincipal extends JApplet {
 		txtDefinirEstacionamento.setEditable(false);
 		panel_1.add(txtDefinirEstacionamento);
 		
-		JComboBox<Vertice> cBdefinirEstacionamento = new JComboBox<Vertice>(locais);
+		cBdefinirEstacionamento = new JComboBox<Vertice>(locais);
 		cBdefinirEstacionamento.setBounds(96, 177, 38, 20);
 		panel_1.add(cBdefinirEstacionamento);
 		
@@ -152,7 +166,7 @@ public class TelaPrincipal extends JApplet {
 		txtpnDefinirBanco.setBounds(82, 302, 78, 20);
 		panel_1.add(txtpnDefinirBanco);
 		
-		JComboBox<Vertice> cBdefinirBanco = new JComboBox<Vertice>(locais);
+		cBdefinirBanco = new JComboBox<Vertice>(locais);
 		cBdefinirBanco.setBounds(96, 343, 38, 20);
 		panel_1.add(cBdefinirBanco);
 		setSize(Toolkit.getDefaultToolkit().getScreenSize().width-10,Toolkit.getDefaultToolkit().getScreenSize().height-50);
