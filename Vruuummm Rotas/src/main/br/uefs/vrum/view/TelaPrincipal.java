@@ -29,6 +29,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import br.uefs.vrum.controller.Controller;
 import br.uefs.vrum.util.Vertice;
 import java.awt.Font;
+import javax.swing.JTextField;
 
 public class TelaPrincipal extends JApplet {
 
@@ -47,6 +48,7 @@ public class TelaPrincipal extends JApplet {
 	JComboBox<Vertice> cBdefinirEstacionamento;
 	JComboBox<Vertice> cBdefinirBanco;
 	JComboBox<Vertice> cBdefinirPontoColeta;
+	private JTextField textTempoPercurso;
 	
 	/**
 	 * Create the applet.
@@ -127,58 +129,73 @@ public class TelaPrincipal extends JApplet {
 		
 		cBpontoOrigem = new JComboBox<Vertice>();
 		cBpontoOrigem.setToolTipText("Selecione um ponto da liga\u00E7\u00E3o da rota");
-		cBpontoOrigem.setBounds(10, 69, 80, 20);
+		cBpontoOrigem.setBounds(10, 75, 80, 20);
 		panel_1.add(cBpontoOrigem);
 		
 		cBpontoDestino = new JComboBox<Vertice>();
 		cBpontoDestino.setToolTipText("Selecione um ponto de liga\u00E7\u00E3o da rota");
-		cBpontoDestino.setBounds(121, 69, 80, 20);
+		cBpontoDestino.setBounds(121, 75, 80, 20);
 		panel_1.add(cBpontoDestino);
 		
 		JButton btnAdicionarLigao = new JButton("Adicionar Liga\u00E7\u00E3o");
 		btnAdicionarLigao.setToolTipText("Cria uma liga\u00E7\u00E3o entre dois pontos selecionados");
-		btnAdicionarLigao.setBounds(45, 100, 129, 23);
+		btnAdicionarLigao.setBounds(45, 139, 129, 23);
 		btnAdicionarLigao.addActionListener(new gerarCaminhoAction());
 		panel_1.add(btnAdicionarLigao);
 		
 		JTextPane txtDefinirEstacionamento = new JTextPane();
 		txtDefinirEstacionamento.setText("Definir Estacionamento");
-		txtDefinirEstacionamento.setBounds(53, 146, 116, 20);
+		txtDefinirEstacionamento.setBounds(53, 185, 116, 20);
 		txtDefinirEstacionamento.setBackground(new Color(240,240,240));
 		txtDefinirEstacionamento.setEditable(false);
 		panel_1.add(txtDefinirEstacionamento);
 		
 		cBdefinirEstacionamento = new JComboBox<Vertice>();
-		cBdefinirEstacionamento.setBounds(70, 177, 80, 20);
+		cBdefinirEstacionamento.setBounds(70, 216, 80, 20);
 		panel_1.add(cBdefinirEstacionamento);
 		
 		JTextPane txtDefinirPontoColeta = new JTextPane();
 		txtDefinirPontoColeta.setEditable(false);
 		txtDefinirPontoColeta.setText("Definir Ponto de Coleta");
 		txtDefinirPontoColeta.setBackground(new Color(240,240,240));
-		txtDefinirPontoColeta.setBounds(56, 222, 120, 20);
+		txtDefinirPontoColeta.setBounds(56, 261, 120, 20);
 		panel_1.add(txtDefinirPontoColeta);
 		
 		cBdefinirPontoColeta = new JComboBox<Vertice>();
-		cBdefinirPontoColeta.setBounds(70, 259, 80, 20);
+		cBdefinirPontoColeta.setBounds(70, 298, 80, 20);
 		panel_1.add(cBdefinirPontoColeta);
 		
 		JTextPane txtpnDefinirBanco = new JTextPane();
 		txtpnDefinirBanco.setText("Definir Banco");
 		txtpnDefinirBanco.setBackground(new Color(240,240,240));
-		txtpnDefinirBanco.setBounds(82, 302, 78, 20);
+		txtpnDefinirBanco.setBounds(82, 341, 78, 20);
 		panel_1.add(txtpnDefinirBanco);
 		
 		cBdefinirBanco = new JComboBox<Vertice>();
-		cBdefinirBanco.setBounds(70, 343, 80, 20);
+		cBdefinirBanco.setBounds(70, 382, 80, 20);
 		panel_1.add(cBdefinirBanco);
 		
 		JTextPane textPane = new JTextPane();
 		textPane.setFont(new Font("Tahoma", Font.BOLD, 16));
 		textPane.setText("\u2194");
-		textPane.setBounds(95, 63, 26, 20);
+		textPane.setBounds(95, 69, 26, 20);
 		textPane.setBackground(new Color(240,240,240));
 		panel_1.add(textPane);
+		
+		textTempoPercurso = new JTextField();
+		textTempoPercurso.setBounds(121, 106, 26, 20);
+		panel_1.add(textTempoPercurso);
+		textTempoPercurso.setColumns(10);
+		
+		JLabel lblTempoDoPercurso = new JLabel("Tempo do Percurso:");
+		lblTempoDoPercurso.setBounds(20, 106, 101, 22);
+		panel_1.add(lblTempoDoPercurso);
+		
+		JTextPane txtpnMinutos = new JTextPane();
+		txtpnMinutos.setText("Minutos");
+		txtpnMinutos.setBackground(new Color(240,240,240));
+		txtpnMinutos.setBounds(153, 106, 44, 20);
+		panel_1.add(txtpnMinutos);
 		setSize(Toolkit.getDefaultToolkit().getScreenSize().width-10,Toolkit.getDefaultToolkit().getScreenSize().height-50);
 	}
 	
