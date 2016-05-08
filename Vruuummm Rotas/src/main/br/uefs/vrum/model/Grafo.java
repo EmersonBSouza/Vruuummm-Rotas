@@ -11,8 +11,8 @@ public class Grafo {
 
 	private List<Vertice> listaVertices;	
 	private double[][] matrizAdjacencia;
-	private List<List<Integer>> menoresCaminhos = new ArrayList<>();
-	List<Trajeto> trajetos = new ArrayList<Trajeto>();
+	private List<List<Integer>> menoresCaminhos;
+	List<Trajeto> trajetos;
 	public Grafo(){
 		setListaVertices(new ArrayList<Vertice>());	
 	}
@@ -115,6 +115,8 @@ public class Grafo {
 	
 	public List<List<Vertice>> menorCaminho(int partida,int chegada){
 		
+		menoresCaminhos = new ArrayList<List<Integer>>();
+		trajetos = new ArrayList<Trajeto>();
 		matrizAdjacencia = transformaEmMatriz();
 		double custo[] = new double[listaVertices.size()];
 		//int[] anterior = new int[listaVertices.size()];
