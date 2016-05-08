@@ -424,7 +424,7 @@ public class TelaPrincipal extends JApplet {
 
 			if (menoresCaminhosBanco.size() > 1) {
 				cBmenoresCaminhosBanco.setVisible(true);
-				cBmenoresCaminhosBanco.addItem(menoresCaminhosPonto);
+				cBmenoresCaminhosBanco.addItem(menoresCaminhosBanco);
 				cBmenoresCaminhosBanco.setSelectedItem(menoresCaminhosBanco.get(0));
 			}
 
