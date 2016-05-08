@@ -58,10 +58,14 @@ public class TelaPrincipal extends JApplet {
 	private JComboBox<Vertice> cBdefinirPontoColeta;
 	private JComboBox<Vertice> cBdestinoRemocao;
 	private JComboBox<Vertice> cBorigemRemocao;
+	private List<List<Vertice>> menoresCaminhosPonto;
+	private List<List<Vertice>> menoresCaminhosBanco;
+	private JComboBox<List<List<Vertice>>> cBmenoresCaminhosPonto;
+	private JComboBox<List<List<Vertice>>> cBmenoresCaminhosBanco;
 	private JTextField textTempoPercurso;
 
-	
-	
+
+
 	public void init(){
 		setSize(Toolkit.getDefaultToolkit().getScreenSize().width-10,Toolkit.getDefaultToolkit().getScreenSize().height-50);
 	}
@@ -96,6 +100,12 @@ public class TelaPrincipal extends JApplet {
 				if((arg0.getModifiers() & MouseEvent.BUTTON1_MASK)!=0){
 					Point posicaoMouse = getContentPane().getMousePosition();
 					String nome = JOptionPane.showInputDialog("Insira o nome do novo local:");
+					for(Vertice v : controller.getGrafo().getListaVertices())
+						if(v.getIndice().equals(nome)) {
+							JOptionPane.showMessageDialog(null, "Já foi cadastrado um local com esse nome!");
+							return;
+						}
+
 					if(nome != null) {
 						adicionarPontoTela(posicaoMouse.x, posicaoMouse.y,nome);
 						Vertice novoPonto = controller.adicionarPonto(nome);
@@ -130,6 +140,18 @@ public class TelaPrincipal extends JApplet {
 		btnCalcularMenorRota.setBounds(45, 436, 129, 28);
 		btnCalcularMenorRota.addActionListener(new CalcularMenorCaminhoAction());
 		panel_1.add(btnCalcularMenorRota);
+
+		cBmenoresCaminhosPonto = new JComboBox<List<List<Vertice>>>();
+		cBmenoresCaminhosPonto.setToolTipText("Escolha o caminho que deseja visualizar");
+		cBmenoresCaminhosPonto.setVisible(false);
+		cBmenoresCaminhosPonto.addActionListener(new ExibirCaminhoAction());
+		panel_1.add(cBmenoresCaminhosPonto);
+
+		cBmenoresCaminhosBanco = new JComboBox<List<List<Vertice>>>();
+		cBmenoresCaminhosBanco.setToolTipText("Escolha o caminho que deseja visualizar");
+		cBmenoresCaminhosBanco.setVisible(false);
+		cBmenoresCaminhosBanco.addActionListener(new ExibirCaminhoAction());
+		panel_1.add(cBmenoresCaminhosBanco);
 
 		JTextPane txtAdicionarCaminho = new JTextPane();
 		txtAdicionarCaminho.setBackground(new Color(240,240,240));
@@ -217,33 +239,33 @@ public class TelaPrincipal extends JApplet {
 		txtpnMinutos.setBackground(new Color(240,240,240));
 		txtpnMinutos.setBounds(153, 106, 44, 20);
 		panel_1.add(txtpnMinutos);
-		
+
 		JTextPane txtpnRemoverCaminho = new JTextPane();
 		txtpnRemoverCaminho.setText("Remover Caminho");
 		txtpnRemoverCaminho.setBounds(70, 492, 99, 20);
 		txtpnRemoverCaminho.setBackground(new Color(240,240,240));
 		panel_1.add(txtpnRemoverCaminho);
-		
+
 		cBorigemRemocao = new JComboBox<Vertice>();
 		cBorigemRemocao.setBounds(10, 524, 80, 20);
 		panel_1.add(cBorigemRemocao);
-		
+
 		JTextPane txtpnu = new JTextPane();
 		txtpnu.setFont(new Font("Tahoma", Font.BOLD, 16));
 		txtpnu.setText("\u2194");
 		txtpnu.setBounds(95, 519, 26, 20);
 		txtpnu.setBackground(new Color(240,240,240));
 		panel_1.add(txtpnu);
-		
+
 		cBdestinoRemocao = new JComboBox<Vertice>();
 		cBdestinoRemocao.setBounds(121, 524, 80, 20);
 		panel_1.add(cBdestinoRemocao);
-		
+
 		JButton btnRemoverLigao = new JButton("Remover Liga\u00E7\u00E3o");
 		btnRemoverLigao.setBounds(45, 562, 129, 23);
 		btnRemoverLigao.addActionListener(new RemoverLigacao());
 		panel_1.add(btnRemoverLigao);
-	//	setSize(Toolkit.getDefaultToolkit().getScreenSize().width-10,Toolkit.getDefaultToolkit().getScreenSize().height-50);
+		//	setSize(Toolkit.getDefaultToolkit().getScreenSize().width-10,Toolkit.getDefaultToolkit().getScreenSize().height-50);
 	}
 
 	public void adicionarPontoTela(int x,int y, String nome){
@@ -282,7 +304,7 @@ public class TelaPrincipal extends JApplet {
 		super.paint(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(Color.black);
-		
+
 		Iterator<Ponto> iterador = coordenadas.getListaCoordenadas().iterator();
 		Ponto atual;
 		while(iterador.hasNext()) {
@@ -303,7 +325,7 @@ public class TelaPrincipal extends JApplet {
 				g2d.setColor(new Color(240,240,240,0));
 			}
 			g2d.drawLine(l.getX1(), l.getY1(), l.getX2(), l.getY2());
-			
+
 		}
 	}
 
@@ -317,7 +339,7 @@ public class TelaPrincipal extends JApplet {
 		return null;
 	}
 	public List<Linha> encontrarLinhasVizinhas(Ponto ponto){
-		
+
 		linhasVizinhas = new ArrayList<>();
 		for(Linha linha:linhas){
 			if(linha.getX1() == ponto.getPonto().getBounds().getCenterX() || linha.getX2() == ponto.getPonto().getBounds().getCenterX()){
@@ -336,7 +358,7 @@ public class TelaPrincipal extends JApplet {
 	public void removerPonto(Ponto ponto){
 		ponto.setEstaNaTela(false);
 	}
-	
+
 	public class gerarCaminhoAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -374,33 +396,83 @@ public class TelaPrincipal extends JApplet {
 			Vertice origem = (Vertice) cBdefinirEstacionamento.getSelectedItem();
 			Vertice pontoDeColeta = (Vertice) cBdefinirPontoColeta.getSelectedItem();
 			Vertice destino = (Vertice) cBdefinirBanco.getSelectedItem();
+			cBmenoresCaminhosPonto.setVisible(false);
+			cBdefinirBanco.setVisible(false);
+
 			try {
-				menorCaminho = controller.calcularMenorCaminho(origem.getIndice(), pontoDeColeta.getIndice()).get(0);
+				menoresCaminhosPonto = controller.calcularMenorCaminho(origem.getIndice(), pontoDeColeta.getIndice());
 			} catch (verticeInexistenteException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+
+			if (menoresCaminhosPonto.size() > 1) {
+				cBmenoresCaminhosPonto.setVisible(true);
+				cBmenoresCaminhosPonto.addItem(menoresCaminhosPonto);
+				cBmenoresCaminhosPonto.setSelectedItem(menoresCaminhosPonto.get(0));
+			}
+
+			else if(menoresCaminhosPonto.size() == 0)
+				JOptionPane.showMessageDialog(null, "Impossível chegar ao Ponto de Coleta a partir do estacionamento!");
+
+			menorCaminho = menoresCaminhosPonto.get(0);
+
 			try {
-				menorCaminho.addAll(controller.calcularMenorCaminho(pontoDeColeta.getIndice(), destino.getIndice()).get(0));
+				menoresCaminhosBanco = controller.calcularMenorCaminho(pontoDeColeta.getIndice(), destino.getIndice());
 			} catch (verticeInexistenteException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
- 			for(Linha l : linhas) {
+
+			if (menoresCaminhosBanco.size() > 1) {
+				cBmenoresCaminhosBanco.setVisible(true);
+				cBmenoresCaminhosBanco.addItem(menoresCaminhosPonto);
+				cBmenoresCaminhosBanco.setSelectedItem(menoresCaminhosBanco.get(0));
+			}
+
+			else if(menoresCaminhosBanco.size() == 0)
+				JOptionPane.showMessageDialog(null, "Impossível chegar ao Banco a partir do Ponto de Coleta");
+
+			menorCaminho.addAll(menoresCaminhosBanco.get(0));
+
+			for(Linha l : linhas) {
 				for(Vertice v : menorCaminho) {
-				int posicaoAtual = 0;
-				Vertice[] vetorMenorCaminho = (Vertice[]) menorCaminho.toArray(new Vertice[menorCaminho.size()]);
+					int posicaoAtual = 0;
+					Vertice[] vetorMenorCaminho = (Vertice[]) menorCaminho.toArray(new Vertice[menorCaminho.size()]);
 					while((posicaoAtual<vetorMenorCaminho.length-1)) {
 						if(vetorMenorCaminho[posicaoAtual].getIndice().equals(l.getNomePonto1()) && vetorMenorCaminho[posicaoAtual+1].getIndice().equals(l.getNomePonto2()))
 							l.setParteDoMenorCaminho(true);
 						posicaoAtual++;
- 					}
+					}
 				}
- 			}
+			}
 			repaint();
 		}
 	}
-	
+
+	public class ExibirCaminhoAction implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JComboBox combo = (JComboBox)e.getSource();
+			List<Vertice> caminho = (List<Vertice>) combo.getSelectedItem();
+
+			for(Linha l : linhas)
+				l.setParteDoMenorCaminho(false);
+
+			for(Linha l : linhas) {
+				for(Vertice v : caminho) {
+					int posicaoAtual = 0;
+					Vertice[] vetorCaminho = (Vertice[]) caminho.toArray(new Vertice[caminho.size()]);
+					while((posicaoAtual<vetorCaminho.length-1)) {
+						if(vetorCaminho[posicaoAtual].getIndice().equals(l.getNomePonto1()) && vetorCaminho[posicaoAtual+1].getIndice().equals(l.getNomePonto2()))
+							l.setParteDoMenorCaminho(true);
+						posicaoAtual++;
+					}
+				}
+			}
+			repaint();
+		}
+	}
+
 	public class RemoverLigacao implements ActionListener{
 
 		@Override
@@ -419,9 +491,9 @@ public class TelaPrincipal extends JApplet {
 				removerLinha();
 				repaint();
 			}
-			
+
 		}
-		
+
 	}
 }
 
