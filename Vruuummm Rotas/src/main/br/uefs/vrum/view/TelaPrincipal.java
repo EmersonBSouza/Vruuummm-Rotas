@@ -301,6 +301,7 @@ public class TelaPrincipal extends JApplet {
 
 			}
 			linhas.add(new Linha(x1,y1,x2,y2));
+			repaint();
 		}
 	}
 }
