@@ -27,12 +27,13 @@ public class CoordenadasGUI {
 		return coordenadas;
 	}
 	
-	public void salvarCoordenadas(int x, int y){
+	public void salvarCoordenadas(int x, int y, String nome){
 		JLabel label = new JLabel("Ola");
 		label.setIcon(iconePonto);
 		label.setToolTipText("Ola");
 		label.setBounds(x, y, 20, 20);
 		listaCoordenadas.add(label);
+		label.setText(nome);
 	}
 	
 	public List<JLabel> getListaCoordenadas() {
