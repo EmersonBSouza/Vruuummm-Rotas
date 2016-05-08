@@ -35,4 +35,9 @@ public class Vertice {
 	public void setListaAdj(List<Aresta> listaAdj) {
 		this.listaAdj = listaAdj;
 	}
+	
+	@Override
+	public String toString() { 
+		return this.indice;
+	}
 }

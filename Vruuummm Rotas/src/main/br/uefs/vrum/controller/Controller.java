@@ -6,7 +6,7 @@ import br.uefs.vrum.util.*;
 
 public class Controller {
 
-	Grafo grafo = new Grafo();
+	private Grafo grafo = new Grafo();
 	
 	public void adicionarPonto(String local){
 		Vertice vertice = new Vertice(local);
@@ -55,5 +55,9 @@ public class Controller {
 	public void removerCaminho(String nomeOrigem, String nomeDestino) throws verticeInexistenteException, arestaInexistenteException{
 		Aresta aRemover = recuperarCaminho(nomeOrigem,nomeDestino);
 		grafo.removerAresta(aRemover);
+	}
+	
+	public Grafo getGrafo() {
+		return this.grafo;
 	}
 }
