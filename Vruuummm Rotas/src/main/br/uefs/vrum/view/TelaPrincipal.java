@@ -33,6 +33,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import br.uefs.vrum.controller.Controller;
 import br.uefs.vrum.exceptions.verticeInexistenteException;
 import br.uefs.vrum.util.Vertice;
+import br.uefs.vrum.util.Aresta;
 
 public class TelaPrincipal extends JApplet {
 
@@ -331,14 +332,31 @@ public class TelaPrincipal extends JApplet {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			for(Linha l : linhas) {
-				int posicaoAtual = 0;
-				Vertice[] vetorMenorCaminho = (Vertice[]) menorCaminho.toArray(new Vertice[menorCaminho.size()]);
-				while((posicaoAtual<vetorMenorCaminho.length)) {
-				if(vetorMenorCaminho[posicaoAtual].getIndice().equals(l.getNomePonto1()) && vetorMenorCaminho[posicaoAtual+1].getIndice().equals(l.getNomePonto2()))
-					l.setParteDoMenorCaminho(true);
-				posicaoAtual++;
+//			Vertice[] vetorMenorCaminho = (Vertice[]) menorCaminho.toArray(new Vertice[menorCaminho.size()]);
+//			
+//			List<Linha> linhasMenhorCaminho = new ArrayList<Linha>();
+//			int posicaoAtual = 0;
+//			while((posicaoAtual+1 < vetorMenorCaminho.length)) {
+//				 
+//			}
+			Iterator<Vertice> iterador = menorCaminho.iterator();
+			List<Aresta> arestasDoMenorCaminho = new ArrayList<Aresta>();
+			Vertice atual = null;
+			Vertice anterior = null;
+			while(iterador.hasNext()) {
+				anterior = atual;
+				atual = iterador.next();
+				if(anterior != null) {
+					Aresta a = new Aresta(anterior, atual, 0);
+					arestasDoMenorCaminho.add(a);
 				}
+			}
+			
+			for(Linha l : linhas) {
+				for(Aresta a : arestasDoMenorCaminho)
+				if( (a.getOrigem().getIndice().equals(l.getNomePonto1()) && a.getDestino().equals(l.getNomePonto2()) )
+					|| (a.getOrigem().getIndice().equals(l.getNomePonto2()) && a.getDestino().getIndice().equals(l.getNomePonto1())))
+					l.setParteDoMenorCaminho(true);
 			}
 			repaint();
 		}
