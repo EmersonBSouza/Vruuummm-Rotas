@@ -15,8 +15,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JApplet;
@@ -29,6 +31,8 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import org.junit.Ignore;
 
 import br.uefs.vrum.controller.Controller;
 import br.uefs.vrum.exceptions.verticeInexistenteException;
@@ -59,6 +63,11 @@ public class TelaPrincipal extends JApplet {
 	private JComboBox<Vertice> cBorigemRemocao;
 	private JTextField textTempoPercurso;
 
+	
+	
+	public void init(){
+		setSize(Toolkit.getDefaultToolkit().getScreenSize().width-10,Toolkit.getDefaultToolkit().getScreenSize().height-50);
+	}
 	/**
 	 * Create the applet.
 	 * @throws UnsupportedLookAndFeelException 
@@ -93,13 +102,7 @@ public class TelaPrincipal extends JApplet {
 					if(nome != null) {
 						adicionarPontoTela(posicaoMouse.x, posicaoMouse.y,nome);
 						Vertice novoPonto = controller.adicionarPonto(nome);
-						cBpontoOrigem.addItem(novoPonto);
-						cBpontoDestino.addItem(novoPonto);
-						cBdefinirEstacionamento.addItem(novoPonto);
-						cBdefinirBanco.addItem(novoPonto);
-						cBdefinirPontoColeta.addItem(novoPonto);
-						cBorigemRemocao.addItem(novoPonto);
-						cBdestinoRemocao.addItem(novoPonto);
+						adicionarAoComboBox(novoPonto);	
 					}
 				}else if((arg0.getModifiers() & MouseEvent.BUTTON3_MASK)!=0){
 					Point posicaoMouse = getContentPane().getMousePosition();
@@ -108,20 +111,7 @@ public class TelaPrincipal extends JApplet {
 						removerPonto(ponto);
 						encontrarLinhasVizinhas(ponto);
 						removerLinha();
-						try {
-							Vertice removido = controller.removerVertice(ponto.getPonto().getText());
-							cBpontoOrigem.removeItem(removido);
-							cBpontoDestino.removeItem(removido);
-							cBdefinirEstacionamento.removeItem(removido);
-							cBdefinirBanco.removeItem(removido);
-							cBdefinirPontoColeta.removeItem(removido);
-							cBorigemRemocao.removeItem(removido);
-							cBdestinoRemocao.removeItem(removido);
-							coordenadas.getListaCoordenadas().remove(coordenadas.getListaCoordenadas().indexOf(ponto));
-						} catch (verticeInexistenteException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						removerDoComboBox(ponto);
 						repaint();
 					}
 				}
@@ -256,7 +246,7 @@ public class TelaPrincipal extends JApplet {
 		btnRemoverLigao.setBounds(45, 562, 129, 23);
 		btnRemoverLigao.addActionListener(new RemoverLigacao());
 		panel_1.add(btnRemoverLigao);
-		setSize(Toolkit.getDefaultToolkit().getScreenSize().width-10,Toolkit.getDefaultToolkit().getScreenSize().height-50);
+	//	setSize(Toolkit.getDefaultToolkit().getScreenSize().width-10,Toolkit.getDefaultToolkit().getScreenSize().height-50);
 	}
 
 	public void adicionarPontoTela(int x,int y, String nome){
@@ -264,6 +254,33 @@ public class TelaPrincipal extends JApplet {
 		repaint();
 	}
 
+	public void adicionarAoComboBox(Vertice novoPonto){
+		cBpontoOrigem.addItem(novoPonto);
+		cBpontoDestino.addItem(novoPonto);
+		cBdefinirEstacionamento.addItem(novoPonto);
+		cBdefinirBanco.addItem(novoPonto);
+		cBdefinirPontoColeta.addItem(novoPonto);
+		cBorigemRemocao.addItem(novoPonto);
+		cBdestinoRemocao.addItem(novoPonto);
+	}
+	public void removerDoComboBox(Ponto ponto){
+		try {
+			Vertice removido = controller.removerVertice(ponto.getPonto().getText());
+			cBpontoOrigem.removeItem(removido);
+			cBpontoDestino.removeItem(removido);
+			cBdefinirEstacionamento.removeItem(removido);
+			cBdefinirBanco.removeItem(removido);
+			cBdefinirPontoColeta.removeItem(removido);
+			cBorigemRemocao.removeItem(removido);
+			cBdestinoRemocao.removeItem(removido);
+			coordenadas.getListaCoordenadas().remove(coordenadas.getListaCoordenadas().indexOf(ponto));
+		} catch (verticeInexistenteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(NoSuchElementException | ConcurrentModificationException e){
+			removerDoComboBox(ponto);
+		} 
+	}
 	public void paint(Graphics g){
 		super.paint(g);
 		Graphics2D g2d = (Graphics2D) g;
@@ -372,13 +389,6 @@ public class TelaPrincipal extends JApplet {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-//			Vertice[] vetorMenorCaminho = (Vertice[]) menorCaminho.toArray(new Vertice[menorCaminho.size()]);
-//			
-//			List<Linha> linhasMenhorCaminho = new ArrayList<Linha>();
-//			int posicaoAtual = 0;
-//			while((posicaoAtual+1 < vetorMenorCaminho.length)) {
-//				 
-//			}
  			for(Linha l : linhas) {
 				for(Vertice v : menorCaminho) {
 				int posicaoAtual = 0;
@@ -390,25 +400,6 @@ public class TelaPrincipal extends JApplet {
  					}
 				}
  			}
-//			Iterator<Vertice> iterador = menorCaminho.iterator();
-//			List<Aresta> arestasDoMenorCaminho = new ArrayList<Aresta>();
-//			Vertice atual = null;
-//			Vertice anterior = null;
-//			while(iterador.hasNext()) {
-//				anterior = atual;
-//				atual = iterador.next();
-//				if(anterior != null) {
-//					Aresta a = new Aresta(anterior, atual, 0);
-//					arestasDoMenorCaminho.add(a);
-//				}
-//			}
-//			
-//			for(Linha l : linhas) {
-//				for(Aresta a : arestasDoMenorCaminho)
-//				if( (a.getOrigem().getIndice().equals(l.getNomePonto1()) && a.getDestino().equals(l.getNomePonto2()) )
-//					|| (a.getOrigem().getIndice().equals(l.getNomePonto2()) && a.getDestino().getIndice().equals(l.getNomePonto1())))
-//					l.setParteDoMenorCaminho(true);
-//			}
 			repaint();
 		}
 	}
