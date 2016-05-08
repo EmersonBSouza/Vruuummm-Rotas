@@ -123,16 +123,13 @@ public class TelaPrincipal extends JApplet {
 		txtAdicionarCaminho.setEditable(false);
 		panel_1.add(txtAdicionarCaminho);
 		
-		List<Vertice> vertices = controller.getGrafo().getListaVertices();
-		Vertice[] locais = (Vertice[]) vertices.toArray(new Vertice[vertices.size()]);
-		
-		cBpontoOrigem = new JComboBox<Vertice>(locais);
+		cBpontoOrigem = new JComboBox<Vertice>();
 		cBpontoOrigem.setToolTipText("Selecione um ponto da liga\u00E7\u00E3o da rota");
 		cBpontoOrigem.setBounds(48, 69, 58, 20);
 		cBpontoOrigem.setPreferredSize(new Dimension(200, 20));
 		panel_1.add(cBpontoOrigem);
 		
-		cBpontoDestino = new JComboBox<Vertice>(locais);
+		cBpontoDestino = new JComboBox<Vertice>();
 		cBpontoDestino.setToolTipText("Selecione um ponto de liga\u00E7\u00E3o da rota");
 		cBpontoDestino.setBounds(116, 69, 58, 20);
 		cBpontoDestino.setPreferredSize(new Dimension(200, 20));
@@ -150,7 +147,7 @@ public class TelaPrincipal extends JApplet {
 		txtDefinirEstacionamento.setEditable(false);
 		panel_1.add(txtDefinirEstacionamento);
 		
-		cBdefinirEstacionamento = new JComboBox<Vertice>(locais);
+		cBdefinirEstacionamento = new JComboBox<Vertice>();
 		cBdefinirEstacionamento.setBounds(96, 177, 38, 20);
 		cBdefinirEstacionamento.setPreferredSize(new Dimension(200, 20));
 		panel_1.add(cBdefinirEstacionamento);
@@ -162,7 +159,7 @@ public class TelaPrincipal extends JApplet {
 		txtDefinirPontoColeta.setBounds(56, 222, 120, 20);
 		panel_1.add(txtDefinirPontoColeta);
 		
-		cBdefinirPontoColeta = new JComboBox<Vertice>(locais);
+		cBdefinirPontoColeta = new JComboBox<Vertice>();
 		cBdefinirPontoColeta.setBounds(96, 258, 38, 20);
 		cBdefinirPontoColeta.setPreferredSize(new Dimension(200, 20));
 		panel_1.add(cBdefinirPontoColeta);
@@ -173,7 +170,7 @@ public class TelaPrincipal extends JApplet {
 		txtpnDefinirBanco.setBounds(82, 302, 78, 20);
 		panel_1.add(txtpnDefinirBanco);
 		
-		cBdefinirBanco = new JComboBox<Vertice>(locais);
+		cBdefinirBanco = new JComboBox<Vertice>();
 		cBdefinirBanco.setBounds(96, 343, 38, 20);
 		cBdefinirBanco.setPreferredSize(new Dimension(200, 20));
 		panel_1.add(cBdefinirBanco);
