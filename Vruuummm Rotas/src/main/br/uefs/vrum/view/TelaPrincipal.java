@@ -31,7 +31,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import br.uefs.vrum.controller.Controller;
-import br.uefs.vrum.util.Aresta;
+import br.uefs.vrum.exceptions.verticeInexistenteException;
 import br.uefs.vrum.util.Vertice;
 
 public class TelaPrincipal extends JApplet {
@@ -42,7 +42,7 @@ public class TelaPrincipal extends JApplet {
 	private static final long serialVersionUID = 1L;
 
 	public CoordenadasGUI coordenadas = CoordenadasGUI.getInstance();
-	public List<JLabel> vertices = new ArrayList<JLabel>();
+	public List<Vertice> menorCaminho = new ArrayList<Vertice>();
 	public List<Linha> linhas = new ArrayList<Linha>();
 	private Controller controller = new Controller();
 	private JPanel panel = new JPanel();
@@ -122,6 +122,7 @@ public class TelaPrincipal extends JApplet {
 
 		JButton btnCalcularMenorRota = new JButton("Calcular Menor Rota");
 		btnCalcularMenorRota.setBounds(45, 464, 129, 28);
+		btnCalcularMenorRota.addActionListener(new CalcularMenorCaminhoAction());
 		panel_1.add(btnCalcularMenorRota);
 
 		JTextPane txtAdicionarCaminho = new JTextPane();
@@ -191,7 +192,7 @@ public class TelaPrincipal extends JApplet {
 			@Override
 			public void keyTyped(KeyEvent arg0) {
 				char c = arg0.getKeyChar();
-				
+
 				if(!(Character.isDigit(c)|| c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE )){
 					arg0.consume();
 				}
@@ -231,7 +232,11 @@ public class TelaPrincipal extends JApplet {
 			g2d.drawString(atual.getText(),(float)atual.getBounds().getCenterX()-atual.getText().length()*3,(float)atual.getBounds().getY()-25);
 		}
 		for(Linha l : linhas){
-			   g2d.drawLine(l.getX1(), l.getY1(), l.getX2(), l.getY2());
+			if(l.isParteDoMenorCaminho())
+				g2d.setColor(Color.red);
+			else
+				g2d.setColor(Color.black);
+			g2d.drawLine(l.getX1(), l.getY1(), l.getX2(), l.getY2());
 		}
 		/*int x1 = -1, y1 = -1, x2 = -1, y2 = -1;
 		for(Vertice v : controller.getGrafo().getListaVertices()){
@@ -300,9 +305,41 @@ public class TelaPrincipal extends JApplet {
 				}
 
 			}
-			linhas.add(new Linha(x1,y1,x2,y2));
+			Linha l = new Linha(x1, y1, x2, y2);
+			l.setNomePonto1(origem.getIndice());
+			l.setNomePonto2(destino.getIndice());
+			linhas.add(l);
 			repaint();
 		}
+	}
+
+	public class CalcularMenorCaminhoAction implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+			Vertice origem = (Vertice) cBdefinirEstacionamento.getSelectedItem();
+			Vertice pontoDeColeta = (Vertice) cBdefinirPontoColeta.getSelectedItem();
+			Vertice destino = (Vertice) cBdefinirBanco.getSelectedItem();
+			try {
+				menorCaminho = controller.calcularMenorCaminho(origem.getIndice(), pontoDeColeta.getIndice()).get(0);
+			} catch (verticeInexistenteException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				menorCaminho.addAll(controller.calcularMenorCaminho(pontoDeColeta.getIndice(), destino.getIndice()).get(0));
+			} catch (verticeInexistenteException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			for(Linha l : linhas) {
+				for(Vertice v : menorCaminho) {
+					if(v.getIndice().equals(l.getNomePonto1()) || v.getIndice().equals(l.getNomePonto2()))
+						l.setParteDoMenorCaminho(true);
+				}
+			}
+			repaint();
+		}
+
 	}
 }
 
