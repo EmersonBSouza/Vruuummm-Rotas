@@ -2,12 +2,15 @@ package br.uefs.vrum.view;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -22,6 +25,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -29,8 +33,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 import br.uefs.vrum.controller.Controller;
 import br.uefs.vrum.util.Aresta;
 import br.uefs.vrum.util.Vertice;
-import java.awt.Font;
-import javax.swing.JTextField;
 
 public class TelaPrincipal extends JApplet {
 
@@ -41,6 +43,7 @@ public class TelaPrincipal extends JApplet {
 
 	public CoordenadasGUI coordenadas = CoordenadasGUI.getInstance();
 	public List<JLabel> vertices = new ArrayList<JLabel>();
+	public List<Linha> linhas = new ArrayList<Linha>();
 	private Controller controller = new Controller();
 	private JPanel panel = new JPanel();
 	public JPanel panel_1 = new JPanel();
@@ -184,6 +187,16 @@ public class TelaPrincipal extends JApplet {
 		panel_1.add(textPane);
 
 		textTempoPercurso = new JTextField();
+		textTempoPercurso.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				char c = arg0.getKeyChar();
+				
+				if(!(Character.isDigit(c)|| c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE )){
+					arg0.consume();
+				}
+			}
+		});
 		textTempoPercurso.setBounds(121, 106, 26, 20);
 		panel_1.add(textTempoPercurso);
 		textTempoPercurso.setColumns(10);
@@ -217,13 +230,12 @@ public class TelaPrincipal extends JApplet {
 			g2d.drawImage(new ImageIcon(TelaPrincipal.class.getResource("/br/uefs/vrum/view/icone_Ponto.png")).getImage(), atual.getX()-20, atual.getY()-20, null);
 			g2d.drawString(atual.getText(),(float)atual.getBounds().getCenterX()-atual.getText().length()*3,(float)atual.getBounds().getY()-25);
 		}
-		int x1 = -1, y1 = -1, x2 = -1, y2 = -1;
-		for(Vertice v : controller.getGrafo().getListaVertices())
+		for(Linha l : linhas){
+			   g2d.drawLine(l.getX1(), l.getY1(), l.getX2(), l.getY2());
+		}
+		/*int x1 = -1, y1 = -1, x2 = -1, y2 = -1;
+		for(Vertice v : controller.getGrafo().getListaVertices()){
 			for(Aresta a : v.getListaAdj()) {
-				x1 = -1;
-				y1 = -1;
-				x2 = -1;
-				y2 = -1;
 				iterador = coordenadas.getListaCoordenadas().iterator();
 				while(iterador.hasNext()) {
 					atual = (JLabel) iterador.next();
@@ -235,10 +247,17 @@ public class TelaPrincipal extends JApplet {
 						x2 = (int) atual.getBounds().getCenterX();
 						y2 = (int) atual.getBounds().getCenterY();
 					}
-					if((x1 & y1 & x2 & y2) != -1)
+					else if(x1!=-1 && y1!=-1 && x2!=-1 && y2 != -1){
 						g2d.drawLine(x1, y1, x2, y2);
+						x1 = -1;
+						y1 = -1;
+						x2 = -1;
+						y2 = -1;
+						break;
+					}
 				}
 			}
+		}*/
 	}
 
 	public JLabel encontrarPonto(int x, int y){
@@ -266,6 +285,23 @@ public class TelaPrincipal extends JApplet {
 			Vertice destino = (Vertice) cBpontoDestino.getSelectedItem();
 			int tempo = Integer.parseInt(textTempoPercurso.getText());
 			controller.adicionarCaminho(origem, destino, tempo);
+			JLabel atual;
+			Iterator<JLabel> iterador = coordenadas.getListaCoordenadas().iterator();
+			int x1 = 0 ,x2 = 0,y1 = 0,y2 = 0;
+			while(iterador.hasNext()) {
+				atual = (JLabel) iterador.next();
+				if(atual.getText().equals(origem.getIndice())) {
+					x1 = (int) atual.getBounds().getCenterX();
+					y1 = (int) atual.getBounds().getCenterY();
+				}
+				else if(atual.getText().equals(destino.getIndice())) {
+					x2 = (int) atual.getBounds().getCenterX();
+					y2 = (int) atual.getBounds().getCenterY();
+				}
+
+			}
+			linhas.add(new Linha(x1,y1,x2,y2));
 		}
 	}
 }
+
