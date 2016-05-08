@@ -332,14 +332,16 @@ public class TelaPrincipal extends JApplet {
 				e1.printStackTrace();
 			}
 			for(Linha l : linhas) {
-				for(Vertice v : menorCaminho) {
-					if(v.getIndice().equals(l.getNomePonto1()) || v.getIndice().equals(l.getNomePonto2()))
-						l.setParteDoMenorCaminho(true);
+				int posicaoAtual = 0;
+				Vertice[] vetorMenorCaminho = (Vertice[]) menorCaminho.toArray(new Vertice[menorCaminho.size()]);
+				while((posicaoAtual<vetorMenorCaminho.length)) {
+				if(vetorMenorCaminho[posicaoAtual].getIndice().equals(l.getNomePonto1()) && vetorMenorCaminho[posicaoAtual+1].getIndice().equals(l.getNomePonto2()))
+					l.setParteDoMenorCaminho(true);
+				posicaoAtual++;
 				}
 			}
 			repaint();
 		}
-
 	}
 }
 
