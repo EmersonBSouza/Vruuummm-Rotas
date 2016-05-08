@@ -155,24 +155,14 @@ public class TelaPrincipal extends JApplet {
 	}
 	
 	public void exibirDados(JLabel label,String texto){
-		JTextPane j = new JTextPane();
-		j.setText(texto);
-		j.setEditable(false);
-		j.setBounds(label.getX(), label.getY()-40, 126, 25);
-		JOptionPane.showMessageDialog(j, j.getText());
+		JTextPane g = new JTextPane();
+		g.setText(texto);
+		g.setEditable(false);
+		g.setBounds(label.getX(), label.getY()-40, 126, 25);
+		JOptionPane.showMessageDialog(g, g.getText());
 	}
 	
 	public void cadastrarPonto(){
 		CadastroPonto ponto = new CadastroPonto();
-	}
-	
-	public void init(){
-		try {
-			new TelaPrincipal();
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-				| UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }
