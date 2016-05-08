@@ -2,11 +2,12 @@ package br.uefs.vrum.view;
 
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -137,6 +138,7 @@ public class TelaPrincipal extends JApplet {
 		JButton btnAdicionarLigao = new JButton("Adicionar Liga\u00E7\u00E3o");
 		btnAdicionarLigao.setToolTipText("Cria uma liga\u00E7\u00E3o entre dois pontos selecionados");
 		btnAdicionarLigao.setBounds(45, 100, 129, 23);
+		btnAdicionarLigao.addActionListener(new gerarCaminhoAction());
 		panel_1.add(btnAdicionarLigao);
 		
 		JTextPane txtDefinirEstacionamento = new JTextPane();
@@ -215,5 +217,14 @@ public class TelaPrincipal extends JApplet {
 		g.setEditable(false);
 		g.setBounds(label.getX(), label.getY()-40, 126, 25);
 		JOptionPane.showMessageDialog(g, g.getText());
+	}
+	
+	public class gerarCaminhoAction implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			Vertice origem = (Vertice) cBpontoOrigem.getSelectedItem();
+			Vertice destino = (Vertice) cBpontoDestino.getSelectedItem();
+			controller.adicionarCaminho(origem, destino, 0);
+		}
 	}
 }
