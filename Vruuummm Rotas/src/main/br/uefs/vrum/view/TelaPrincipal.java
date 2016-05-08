@@ -45,6 +45,8 @@ public class TelaPrincipal extends JApplet {
 	public CoordenadasGUI coordenadas = CoordenadasGUI.getInstance();
 	public List<Vertice> menorCaminho = new ArrayList<Vertice>();
 	public List<Linha> linhas = new ArrayList<Linha>();
+	public List<Linha> linhasVizinhas;
+	public ImageIcon iconePonto = new ImageIcon(TelaPrincipal.class.getResource("/br/uefs/vrum/view/icone_Ponto.png"));
 	private Controller controller = new Controller();
 	private JPanel panel = new JPanel();
 	public JPanel panel_1 = new JPanel();
@@ -53,6 +55,8 @@ public class TelaPrincipal extends JApplet {
 	private JComboBox<Vertice> cBdefinirEstacionamento;
 	private JComboBox<Vertice> cBdefinirBanco;
 	private JComboBox<Vertice> cBdefinirPontoColeta;
+	private JComboBox<Vertice> cBdestinoRemocao;
+	private JComboBox<Vertice> cBorigemRemocao;
 	private JTextField textTempoPercurso;
 
 	/**
@@ -70,7 +74,7 @@ public class TelaPrincipal extends JApplet {
 			@Override
 			public void mouseMoved(MouseEvent arg0) {
 				Point posicaoMouse = getContentPane().getMousePosition();
-				JLabel label = encontrarPonto(posicaoMouse.x,posicaoMouse.y);
+				Ponto label = encontrarPonto(posicaoMouse.x,posicaoMouse.y);
 				if(label!=null){
 					getContentPane().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 				}else{
@@ -94,12 +98,31 @@ public class TelaPrincipal extends JApplet {
 						cBdefinirEstacionamento.addItem(novoPonto);
 						cBdefinirBanco.addItem(novoPonto);
 						cBdefinirPontoColeta.addItem(novoPonto);
+						cBorigemRemocao.addItem(novoPonto);
+						cBdestinoRemocao.addItem(novoPonto);
 					}
 				}else if((arg0.getModifiers() & MouseEvent.BUTTON3_MASK)!=0){
 					Point posicaoMouse = getContentPane().getMousePosition();
-					JLabel label = encontrarPonto(posicaoMouse.x,posicaoMouse.y);
-					if(label!=null){
-						exibirDados(label,label.getText());
+					Ponto ponto = encontrarPonto(posicaoMouse.x,posicaoMouse.y);
+					if(ponto!=null){
+						removerPonto(ponto);
+						encontrarLinhasVizinhas(ponto);
+						removerLinha();
+						try {
+							Vertice removido = controller.removerVertice(ponto.getPonto().getText());
+							cBpontoOrigem.removeItem(removido);
+							cBpontoDestino.removeItem(removido);
+							cBdefinirEstacionamento.removeItem(removido);
+							cBdefinirBanco.removeItem(removido);
+							cBdefinirPontoColeta.removeItem(removido);
+							cBorigemRemocao.removeItem(removido);
+							cBdestinoRemocao.removeItem(removido);
+							coordenadas.getListaCoordenadas().remove(coordenadas.getListaCoordenadas().indexOf(ponto));
+						} catch (verticeInexistenteException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						repaint();
 					}
 				}
 			}
@@ -107,11 +130,6 @@ public class TelaPrincipal extends JApplet {
 
 		panel.setBounds(10, 11, 1120, 625);
 		getContentPane().add(panel);
-
-		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon(TelaPrincipal.class.getResource("/br/uefs/vrum/view/icone_Ponto.png")));
-		lblNewLabel.setBackground(Color.YELLOW);
-		panel.add(lblNewLabel);
 
 		panel_1.setBounds(1133, 11, 211, 625);
 		getContentPane().add(panel_1);
@@ -122,7 +140,7 @@ public class TelaPrincipal extends JApplet {
 		panel_1.add(btnNewButton);
 
 		JButton btnCalcularMenorRota = new JButton("Calcular Menor Rota");
-		btnCalcularMenorRota.setBounds(45, 464, 129, 28);
+		btnCalcularMenorRota.setBounds(45, 436, 129, 28);
 		btnCalcularMenorRota.addActionListener(new CalcularMenorCaminhoAction());
 		panel_1.add(btnCalcularMenorRota);
 
@@ -174,7 +192,7 @@ public class TelaPrincipal extends JApplet {
 		JTextPane txtpnDefinirBanco = new JTextPane();
 		txtpnDefinirBanco.setText("Definir Banco");
 		txtpnDefinirBanco.setBackground(new Color(240,240,240));
-		txtpnDefinirBanco.setBounds(82, 341, 78, 20);
+		txtpnDefinirBanco.setBounds(78, 341, 78, 20);
 		panel_1.add(txtpnDefinirBanco);
 
 		cBdefinirBanco = new JComboBox<Vertice>();
@@ -212,6 +230,32 @@ public class TelaPrincipal extends JApplet {
 		txtpnMinutos.setBackground(new Color(240,240,240));
 		txtpnMinutos.setBounds(153, 106, 44, 20);
 		panel_1.add(txtpnMinutos);
+		
+		JTextPane txtpnRemoverCaminho = new JTextPane();
+		txtpnRemoverCaminho.setText("Remover Caminho");
+		txtpnRemoverCaminho.setBounds(70, 492, 99, 20);
+		txtpnRemoverCaminho.setBackground(new Color(240,240,240));
+		panel_1.add(txtpnRemoverCaminho);
+		
+		cBorigemRemocao = new JComboBox<Vertice>();
+		cBorigemRemocao.setBounds(10, 524, 80, 20);
+		panel_1.add(cBorigemRemocao);
+		
+		JTextPane txtpnu = new JTextPane();
+		txtpnu.setFont(new Font("Tahoma", Font.BOLD, 16));
+		txtpnu.setText("\u2194");
+		txtpnu.setBounds(95, 519, 26, 20);
+		txtpnu.setBackground(new Color(240,240,240));
+		panel_1.add(txtpnu);
+		
+		cBdestinoRemocao = new JComboBox<Vertice>();
+		cBdestinoRemocao.setBounds(121, 524, 80, 20);
+		panel_1.add(cBdestinoRemocao);
+		
+		JButton btnRemoverLigao = new JButton("Remover Liga\u00E7\u00E3o");
+		btnRemoverLigao.setBounds(45, 562, 129, 23);
+		btnRemoverLigao.addActionListener(new RemoverLigacao());
+		panel_1.add(btnRemoverLigao);
 		setSize(Toolkit.getDefaultToolkit().getScreenSize().width-10,Toolkit.getDefaultToolkit().getScreenSize().height-50);
 	}
 
@@ -224,66 +268,61 @@ public class TelaPrincipal extends JApplet {
 		super.paint(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(Color.black);
-
-		Iterator<JLabel> iterador = coordenadas.getListaCoordenadas().iterator();
-		JLabel atual;
+		
+		Iterator<Ponto> iterador = coordenadas.getListaCoordenadas().iterator();
+		Ponto atual;
 		while(iterador.hasNext()) {
-			atual = (JLabel) iterador.next();
-			g2d.drawImage(new ImageIcon(TelaPrincipal.class.getResource("/br/uefs/vrum/view/icone_Ponto.png")).getImage(), atual.getX()-20, atual.getY()-20, null);
-			g2d.drawString(atual.getText(),(float)atual.getBounds().getCenterX()-atual.getText().length()*3,(float)atual.getBounds().getY()-25);
+			atual = (Ponto) iterador.next();
+			g2d.drawImage(iconePonto.getImage(), atual.getPonto().getX()-20, atual.getPonto().getY()-20, null);
+			g2d.drawString(atual.getPonto().getText(),(float)atual.getPonto().getBounds().getCenterX()-atual.getPonto().getText().length()*3,(float)atual.getPonto().getBounds().getY()-25);
+			if(!atual.isEstaNaTela()){
+				g2d.setBackground(new Color(240,240,240));
+				g2d.clearRect((int) atual.getPonto().getBounds().getX()-20, atual.getPonto().getY()-35, iconePonto.getImage().getWidth(this), iconePonto.getImage().getHeight(this)+15);
+			}
 		}
 		for(Linha l : linhas){
 			if(l.isParteDoMenorCaminho())
 				g2d.setColor(Color.red);
 			else
 				g2d.setColor(Color.black);
-			g2d.drawLine(l.getX1(), l.getY1(), l.getX2(), l.getY2());
-		}
-		/*int x1 = -1, y1 = -1, x2 = -1, y2 = -1;
-		for(Vertice v : controller.getGrafo().getListaVertices()){
-			for(Aresta a : v.getListaAdj()) {
-				iterador = coordenadas.getListaCoordenadas().iterator();
-				while(iterador.hasNext()) {
-					atual = (JLabel) iterador.next();
-					if(atual.getText().equals(a.getOrigem().getIndice())) {
-						x1 = (int) atual.getBounds().getCenterX();
-						y1 = (int) atual.getBounds().getCenterY();
-					}
-					else if(atual.getText().equals(a.getDestino().getIndice())) {
-						x2 = (int) atual.getBounds().getCenterX();
-						y2 = (int) atual.getBounds().getCenterY();
-					}
-					else if(x1!=-1 && y1!=-1 && x2!=-1 && y2 != -1){
-						g2d.drawLine(x1, y1, x2, y2);
-						x1 = -1;
-						y1 = -1;
-						x2 = -1;
-						y2 = -1;
-						break;
-					}
-				}
+			if(!l.isEstaNaTela()){
+				g2d.setColor(new Color(240,240,240,0));
 			}
-		}*/
+			g2d.drawLine(l.getX1(), l.getY1(), l.getX2(), l.getY2());
+			
+		}
 	}
 
-	public JLabel encontrarPonto(int x, int y){
+	public Ponto encontrarPonto(int x, int y){
 
-		for(JLabel label:coordenadas.getListaCoordenadas()){
-			if(label.getBounds().getMinX()-20<=x && label.getBounds().getMaxX()+8>=x && label.getBounds().getMinY()-20<=y && label.getBounds().getMaxY()+10>= y){
-				return label;
+		for(Ponto ponto:coordenadas.getListaCoordenadas()){
+			if(ponto.getPonto().getBounds().getMinX()-20<=x && ponto.getPonto().getBounds().getMaxX()+8>=x && ponto.getPonto().getBounds().getMinY()-20<=y && ponto.getPonto().getBounds().getMaxY()+10>= y){
+				return ponto;
 			}
 		}
 		return null;
 	}
-
-	public void exibirDados(JLabel label,String texto){
-		JTextPane g = new JTextPane();
-		g.setText(texto);
-		g.setEditable(false);
-		g.setBounds(label.getX(), label.getY()-40, 126, 25);
-		JOptionPane.showMessageDialog(g, g.getText());
+	public List<Linha> encontrarLinhasVizinhas(Ponto ponto){
+		
+		linhasVizinhas = new ArrayList<>();
+		for(Linha linha:linhas){
+			if(linha.getX1() == ponto.getPonto().getBounds().getCenterX() || linha.getX2() == ponto.getPonto().getBounds().getCenterX()){
+				if(linha.getY1() == ponto.getPonto().getBounds().getCenterY() || linha.getY2()==ponto.getPonto().getBounds().getCenterY()){
+					linhasVizinhas.add(linha);
+				}
+			}
+		}
+		return linhasVizinhas;
 	}
-
+	public void removerLinha(){
+		for(Linha linha:linhasVizinhas){
+			linha.setEstaNaTela(false);
+		}
+	}
+	public void removerPonto(Ponto ponto){
+		ponto.setEstaNaTela(false);
+	}
+	
 	public class gerarCaminhoAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -291,24 +330,25 @@ public class TelaPrincipal extends JApplet {
 			Vertice destino = (Vertice) cBpontoDestino.getSelectedItem();
 			int tempo = Integer.parseInt(textTempoPercurso.getText());
 			controller.adicionarCaminho(origem, destino, tempo);
-			JLabel atual;
-			Iterator<JLabel> iterador = coordenadas.getListaCoordenadas().iterator();
+			Ponto atual;
+			Iterator<Ponto> iterador = coordenadas.getListaCoordenadas().iterator();
 			int x1 = 0 ,x2 = 0,y1 = 0,y2 = 0;
 			while(iterador.hasNext()) {
-				atual = (JLabel) iterador.next();
-				if(atual.getText().equals(origem.getIndice())) {
-					x1 = (int) atual.getBounds().getCenterX();
-					y1 = (int) atual.getBounds().getCenterY();
+				atual = (Ponto) iterador.next();
+				if(atual.getPonto().getText().equals(origem.getIndice())) {
+					x1 = (int) atual.getPonto().getBounds().getCenterX();
+					y1 = (int) atual.getPonto().getBounds().getCenterY();
 				}
-				else if(atual.getText().equals(destino.getIndice())) {
-					x2 = (int) atual.getBounds().getCenterX();
-					y2 = (int) atual.getBounds().getCenterY();
+				else if(atual.getPonto().getText().equals(destino.getIndice())) {
+					x2 = (int) atual.getPonto().getBounds().getCenterX();
+					y2 = (int) atual.getPonto().getBounds().getCenterY();
 				}
 
 			}
 			Linha l = new Linha(x1, y1, x2, y2);
 			l.setNomePonto1(origem.getIndice());
 			l.setNomePonto2(destino.getIndice());
+			l.setEstaNaTela(true);
 			linhas.add(l);
 			repaint();
 		}
@@ -371,6 +411,29 @@ public class TelaPrincipal extends JApplet {
 //			}
 			repaint();
 		}
+	}
+	
+	public class RemoverLigacao implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			linhasVizinhas = new ArrayList<>();
+			Vertice origem = (Vertice) cBorigemRemocao.getSelectedItem();
+			Vertice destino = (Vertice)cBdestinoRemocao.getSelectedItem();
+			for(Linha linha : linhas){
+				if(linha.getNomePonto1().equals(origem.getIndice())|| linha.getNomePonto2().equals(origem.getIndice())){
+					if(linha.getNomePonto1().equals(destino.getIndice())|| linha.getNomePonto2().equals(destino.getIndice())){
+						linhasVizinhas.add(linha);
+					}
+				}
+			}
+			if(linhasVizinhas.size()!=0){
+				removerLinha();
+				repaint();
+			}
+			
+		}
+		
 	}
 }
 

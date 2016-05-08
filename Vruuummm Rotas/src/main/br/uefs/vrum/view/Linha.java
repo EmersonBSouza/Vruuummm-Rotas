@@ -9,6 +9,7 @@ public class Linha {
 	private int y1;
 	private int x2;
 	private int y2;
+	private boolean estaNaTela;
 	
 	
 	public Linha(int x1, int y1, int x2, int y2) {
@@ -101,5 +102,11 @@ public class Linha {
 	 */
 	public void setParteDoMenorCaminho(boolean parteDoMenorCaminho) {
 		this.parteDoMenorCaminho = parteDoMenorCaminho;
+	}
+	public boolean isEstaNaTela() {
+		return estaNaTela;
+	}
+	public void setEstaNaTela(boolean estaNaTela) {
+		this.estaNaTela = estaNaTela;
 	}
 }

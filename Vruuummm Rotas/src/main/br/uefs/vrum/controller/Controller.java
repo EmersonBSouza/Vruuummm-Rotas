@@ -52,9 +52,10 @@ public class Controller {
 		return grafo.menorCaminho(partida, chegada);
 	}
 	
-	public void removerVertice(String nomeVertice) throws verticeInexistenteException{
+	public Vertice removerVertice(String nomeVertice) throws verticeInexistenteException{
 		Vertice aRemover = recuperarPonto(nomeVertice);
 		grafo.removerVertice(aRemover);
+		return aRemover;
 	}
 	
 	public void removerCaminho(String nomeOrigem, String nomeDestino) throws verticeInexistenteException, arestaInexistenteException{
