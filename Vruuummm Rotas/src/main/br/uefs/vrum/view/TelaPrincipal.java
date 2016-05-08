@@ -71,7 +71,8 @@ public class TelaPrincipal extends JApplet {
 			}
 		});
 		
-		panel.setBounds(10, 11, 1120, 625);
+		//panel.setBounds(10, 11, 1120, 625);
+		panel.setBounds(10, 11, 620, 625);
 		getContentPane().add(panel);
 		
 		JLabel lblNewLabel = new JLabel("New label");
@@ -79,7 +80,7 @@ public class TelaPrincipal extends JApplet {
 		lblNewLabel.setBackground(Color.YELLOW);
 		panel.add(lblNewLabel);
 		
-		panel_1.setBounds(1133, 11, 211, 625);
+		//panel_1.setBounds(1133, 11, 211, 625);
 		getContentPane().add(panel_1);
 		panel_1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 159, 234), 6, true));
 		panel_1.setLayout(null);
