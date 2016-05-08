@@ -32,12 +32,9 @@ import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import org.junit.Ignore;
-
 import br.uefs.vrum.controller.Controller;
 import br.uefs.vrum.exceptions.verticeInexistenteException;
 import br.uefs.vrum.util.Vertice;
-import br.uefs.vrum.util.Aresta;
 
 public class TelaPrincipal extends JApplet {
 
