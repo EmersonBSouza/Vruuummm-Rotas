@@ -27,6 +27,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import br.uefs.vrum.controller.Controller;
 import br.uefs.vrum.util.Vertice;
+import java.awt.Font;
 
 public class TelaPrincipal extends JApplet {
 
@@ -125,14 +126,12 @@ public class TelaPrincipal extends JApplet {
 		
 		cBpontoOrigem = new JComboBox<Vertice>();
 		cBpontoOrigem.setToolTipText("Selecione um ponto da liga\u00E7\u00E3o da rota");
-		cBpontoOrigem.setBounds(48, 69, 58, 20);
-		cBpontoOrigem.setPreferredSize(new Dimension(200, 20));
+		cBpontoOrigem.setBounds(10, 69, 80, 20);
 		panel_1.add(cBpontoOrigem);
 		
 		cBpontoDestino = new JComboBox<Vertice>();
 		cBpontoDestino.setToolTipText("Selecione um ponto de liga\u00E7\u00E3o da rota");
-		cBpontoDestino.setBounds(116, 69, 58, 20);
-		cBpontoDestino.setPreferredSize(new Dimension(200, 20));
+		cBpontoDestino.setBounds(121, 69, 80, 20);
 		panel_1.add(cBpontoDestino);
 		
 		JButton btnAdicionarLigao = new JButton("Adicionar Liga\u00E7\u00E3o");
@@ -148,8 +147,7 @@ public class TelaPrincipal extends JApplet {
 		panel_1.add(txtDefinirEstacionamento);
 		
 		cBdefinirEstacionamento = new JComboBox<Vertice>();
-		cBdefinirEstacionamento.setBounds(96, 177, 38, 20);
-		cBdefinirEstacionamento.setPreferredSize(new Dimension(200, 20));
+		cBdefinirEstacionamento.setBounds(70, 177, 80, 20);
 		panel_1.add(cBdefinirEstacionamento);
 		
 		JTextPane txtDefinirPontoColeta = new JTextPane();
@@ -160,8 +158,7 @@ public class TelaPrincipal extends JApplet {
 		panel_1.add(txtDefinirPontoColeta);
 		
 		cBdefinirPontoColeta = new JComboBox<Vertice>();
-		cBdefinirPontoColeta.setBounds(96, 258, 38, 20);
-		cBdefinirPontoColeta.setPreferredSize(new Dimension(200, 20));
+		cBdefinirPontoColeta.setBounds(70, 259, 80, 20);
 		panel_1.add(cBdefinirPontoColeta);
 		
 		JTextPane txtpnDefinirBanco = new JTextPane();
@@ -171,9 +168,15 @@ public class TelaPrincipal extends JApplet {
 		panel_1.add(txtpnDefinirBanco);
 		
 		cBdefinirBanco = new JComboBox<Vertice>();
-		cBdefinirBanco.setBounds(96, 343, 38, 20);
-		cBdefinirBanco.setPreferredSize(new Dimension(200, 20));
+		cBdefinirBanco.setBounds(70, 343, 80, 20);
 		panel_1.add(cBdefinirBanco);
+		
+		JTextPane textPane = new JTextPane();
+		textPane.setFont(new Font("Tahoma", Font.BOLD, 16));
+		textPane.setText("\u2194");
+		textPane.setBounds(95, 63, 26, 20);
+		textPane.setBackground(new Color(240,240,240));
+		panel_1.add(textPane);
 		setSize(Toolkit.getDefaultToolkit().getScreenSize().width-10,Toolkit.getDefaultToolkit().getScreenSize().height-50);
 	}
 	

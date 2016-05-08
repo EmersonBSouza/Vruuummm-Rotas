@@ -113,7 +113,7 @@ public class Grafo {
 		return null;
 	}
 	
-	public List<Integer> menorCaminho(int partida,int chegada){
+	public List<List<Vertice>> menorCaminho(int partida,int chegada){
 		
 		matrizAdjacencia = transformaEmMatriz();
 		double custo[] = new double[listaVertices.size()];
@@ -166,10 +166,11 @@ public class Grafo {
 			}
 			
 			if(indiceVizinhoProximo == chegada){
-				return construirListaMenorCaminho(new ArrayList<>(),indiceVizinhoProximo);
+				construirListaMenorCaminho(new ArrayList<>(),indiceVizinhoProximo);
+				return encontrarVerticesMenorCaminho();
 			}
 		}	
-		return construirListaMenorCaminho(anterior, indiceVizinhoProximo);
+		return Collections.emptyList();
 	}
 	
 	public List<Integer> encontrarVizinhos(int vertice){
@@ -242,5 +243,18 @@ public class Grafo {
 		Collections.reverse(caminho);
 		return caminho;
 		
+	}
+	public List<List<Vertice>> encontrarVerticesMenorCaminho(){
+		
+		List<List<Vertice>> verticesMenorCaminho = new ArrayList<>();
+		for(List<Integer> menorCaminho:menoresCaminhos){
+			List<Vertice> caminhoAtual = new ArrayList<>();
+			for(Integer vertice:menorCaminho){
+				caminhoAtual.add(listaVertices.get(vertice));
+			}
+			verticesMenorCaminho.add(caminhoAtual);
+		}
+		
+		return verticesMenorCaminho;
 	}
 }

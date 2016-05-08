@@ -1,8 +1,12 @@
 package br.uefs.vrum.controller;
 
-import br.uefs.vrum.exceptions.*;
+import java.util.List;
+
+import br.uefs.vrum.exceptions.arestaInexistenteException;
+import br.uefs.vrum.exceptions.verticeInexistenteException;
 import br.uefs.vrum.model.Grafo;
-import br.uefs.vrum.util.*;
+import br.uefs.vrum.util.Aresta;
+import br.uefs.vrum.util.Vertice;
 
 public class Controller {
 
@@ -39,13 +43,13 @@ public class Controller {
 		throw new arestaInexistenteException();
 	}
 	
-	public void calcularMenorCaminho(String nomeOrigem, String nomeDestino) throws verticeInexistenteException{
+	public List<List<Vertice>> calcularMenorCaminho(String nomeOrigem, String nomeDestino) throws verticeInexistenteException{
 		
 		Vertice origem = recuperarPonto(nomeOrigem);
 		Vertice destino = recuperarPonto(nomeDestino);
 		int partida = grafo.getListaVertices().indexOf(origem);
 		int chegada = grafo.getListaVertices().indexOf(destino);
-		grafo.menorCaminho(partida, chegada);
+		return grafo.menorCaminho(partida, chegada);
 	}
 	
 	public void removerVertice(String nomeVertice) throws verticeInexistenteException{
