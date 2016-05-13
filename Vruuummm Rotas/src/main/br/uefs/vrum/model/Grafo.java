@@ -43,16 +43,18 @@ public class Grafo {
 		
 		while(iterador.hasNext()){
 			atual = (Vertice) iterador.next();
-			if(atual.equals(vertice)){
+			if(atual.getIndice().equals(vertice.getIndice())){
 				Iterator<Aresta> adjacencias = vertice.getListaAdj().iterator();
 				Aresta aRemover = null;
 				while(adjacencias.hasNext()){
 					aRemover = (Aresta)adjacencias.next();
 					removerAresta(aRemover);
 				}
+				
+				iterador.remove();
 			}
 		}
-		listaVertices.remove(vertice);
+		//listaVertices.remove(listaVertices.indexOf(vertice));
 	}
 	
 	public void removerAresta(Aresta aresta){
@@ -62,7 +64,7 @@ public class Grafo {
 		
 		while(iteradorOrigem.hasNext()){
 			atual = (Aresta)iteradorOrigem.next();
-			if(atual.getDestino().equals(aresta.getDestino())){
+			if(atual.getDestino().getIndice().equals(aresta.getDestino().getIndice())){
 				iteradorOrigem.remove();
 				break;
 			}
@@ -72,8 +74,8 @@ public class Grafo {
 		atual = null;
 		
 		while(iteradorDestino.hasNext()){
-			atual = (Aresta)iteradorOrigem.next();
-			if(atual.getDestino().equals(aresta.getOrigem())){
+			atual = (Aresta)iteradorDestino.next();
+			if(atual.getOrigem().getIndice().equals(aresta.getOrigem().getIndice())){
 				iteradorDestino.remove();
 				break;
 			}

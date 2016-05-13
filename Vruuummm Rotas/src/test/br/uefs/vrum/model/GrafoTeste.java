@@ -54,6 +54,20 @@ public class GrafoTeste {
 		assertEquals(null, grafo.recuperarVertice("Notre Dame"));
 		
 	}
+	@Test
+	public void removerVerticeComLigacaoSucesso() {
+		
+		Vertice novoVertice = CriarObjetos.criaVertice("Notre Dame");
+		Vertice novoVertice2 = CriarObjetos.criaVertice("Terra do Nunca");
+		
+		grafo.adicionarVertice(novoVertice);
+		grafo.adicionarVertice(novoVertice2);
+		grafo.adicionarAresta(CriarObjetos.criaAresta(novoVertice, novoVertice2, 34));
+		grafo.removerVertice(novoVertice);
+		
+		assertEquals(null, grafo.recuperarVertice("Notre Dame"));
+		
+	}
 	
 	@Test
 	public void removerArestaSucesso() {

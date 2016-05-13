@@ -29,11 +29,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import br.uefs.vrum.controller.Controller;
 import br.uefs.vrum.exceptions.verticeInexistenteException;
+import br.uefs.vrum.util.Aresta;
 import br.uefs.vrum.util.Vertice;
 
 public class TelaPrincipal extends JApplet {
@@ -50,7 +52,8 @@ public class TelaPrincipal extends JApplet {
 	public ImageIcon iconePonto = new ImageIcon(TelaPrincipal.class.getResource("/br/uefs/vrum/view/icone_Ponto.png"));
 	private Controller controller = new Controller();
 	private JPanel panel = new JPanel();
-	public JPanel panel_1 = new JPanel();
+	private JPanel panel_1 = new JPanel();
+	private JTextPane alertas;
 	private JComboBox<Vertice> cBpontoOrigem;
 	private JComboBox<Vertice> cBpontoDestino;
 	private JComboBox<Vertice> cBdefinirEstacionamento;
@@ -105,7 +108,6 @@ public class TelaPrincipal extends JApplet {
 							JOptionPane.showMessageDialog(null, "Já foi cadastrado um local com esse nome!");
 							return;
 						}
-
 					if(nome != null) {
 						adicionarPontoTela(posicaoMouse.x, posicaoMouse.y,nome);
 						Vertice novoPonto = controller.adicionarPonto(nome);
@@ -119,6 +121,7 @@ public class TelaPrincipal extends JApplet {
 						encontrarLinhasVizinhas(ponto);
 						removerLinha();
 						removerDoComboBox(ponto);
+						atualizarCaminho();
 						repaint();
 					}
 				}
@@ -137,7 +140,7 @@ public class TelaPrincipal extends JApplet {
 		panel_1.add(btnNewButton);
 
 		JButton btnCalcularMenorRota = new JButton("Calcular Menor Rota");
-		btnCalcularMenorRota.setBounds(45, 436, 129, 28);
+		btnCalcularMenorRota.setBounds(45, 351, 129, 28);
 		btnCalcularMenorRota.addActionListener(new CalcularMenorCaminhoAction());
 		panel_1.add(btnCalcularMenorRota);
 
@@ -156,62 +159,62 @@ public class TelaPrincipal extends JApplet {
 		JTextPane txtAdicionarCaminho = new JTextPane();
 		txtAdicionarCaminho.setBackground(new Color(240,240,240));
 		txtAdicionarCaminho.setText("Adicionar Caminho");
-		txtAdicionarCaminho.setBounds(70, 38, 99, 20);
+		txtAdicionarCaminho.setBounds(70, 11, 99, 20);
 		txtAdicionarCaminho.setEditable(false);
 		panel_1.add(txtAdicionarCaminho);
 
 		cBpontoOrigem = new JComboBox<Vertice>();
 		cBpontoOrigem.setToolTipText("Selecione um ponto da liga\u00E7\u00E3o da rota");
-		cBpontoOrigem.setBounds(10, 75, 80, 20);
+		cBpontoOrigem.setBounds(10, 48, 80, 20);
 		panel_1.add(cBpontoOrigem);
 
 		cBpontoDestino = new JComboBox<Vertice>();
 		cBpontoDestino.setToolTipText("Selecione um ponto de liga\u00E7\u00E3o da rota");
-		cBpontoDestino.setBounds(121, 75, 80, 20);
+		cBpontoDestino.setBounds(121, 48, 80, 20);
 		panel_1.add(cBpontoDestino);
 
 		JButton btnAdicionarLigao = new JButton("Adicionar Liga\u00E7\u00E3o");
 		btnAdicionarLigao.setToolTipText("Cria uma liga\u00E7\u00E3o entre dois pontos selecionados");
-		btnAdicionarLigao.setBounds(45, 139, 129, 23);
+		btnAdicionarLigao.setBounds(45, 112, 129, 23);
 		btnAdicionarLigao.addActionListener(new gerarCaminhoAction());
 		panel_1.add(btnAdicionarLigao);
 
 		JTextPane txtDefinirEstacionamento = new JTextPane();
 		txtDefinirEstacionamento.setText("Definir Estacionamento");
-		txtDefinirEstacionamento.setBounds(53, 185, 116, 20);
+		txtDefinirEstacionamento.setBounds(53, 170, 116, 20);
 		txtDefinirEstacionamento.setBackground(new Color(240,240,240));
 		txtDefinirEstacionamento.setEditable(false);
 		panel_1.add(txtDefinirEstacionamento);
 
 		cBdefinirEstacionamento = new JComboBox<Vertice>();
-		cBdefinirEstacionamento.setBounds(70, 216, 80, 20);
+		cBdefinirEstacionamento.setBounds(70, 201, 80, 20);
 		panel_1.add(cBdefinirEstacionamento);
 
 		JTextPane txtDefinirPontoColeta = new JTextPane();
 		txtDefinirPontoColeta.setEditable(false);
 		txtDefinirPontoColeta.setText("Definir Ponto de Coleta");
 		txtDefinirPontoColeta.setBackground(new Color(240,240,240));
-		txtDefinirPontoColeta.setBounds(56, 261, 120, 20);
+		txtDefinirPontoColeta.setBounds(54, 232, 120, 20);
 		panel_1.add(txtDefinirPontoColeta);
 
 		cBdefinirPontoColeta = new JComboBox<Vertice>();
-		cBdefinirPontoColeta.setBounds(70, 298, 80, 20);
+		cBdefinirPontoColeta.setBounds(70, 254, 80, 20);
 		panel_1.add(cBdefinirPontoColeta);
 
 		JTextPane txtpnDefinirBanco = new JTextPane();
 		txtpnDefinirBanco.setText("Definir Banco");
 		txtpnDefinirBanco.setBackground(new Color(240,240,240));
-		txtpnDefinirBanco.setBounds(78, 341, 78, 20);
+		txtpnDefinirBanco.setBounds(72, 285, 78, 20);
 		panel_1.add(txtpnDefinirBanco);
 
 		cBdefinirBanco = new JComboBox<Vertice>();
-		cBdefinirBanco.setBounds(70, 382, 80, 20);
+		cBdefinirBanco.setBounds(70, 308, 80, 20);
 		panel_1.add(cBdefinirBanco);
 
 		JTextPane textPane = new JTextPane();
 		textPane.setFont(new Font("Tahoma", Font.BOLD, 16));
 		textPane.setText("\u2194");
-		textPane.setBounds(95, 69, 26, 20);
+		textPane.setBounds(95, 42, 26, 20);
 		textPane.setBackground(new Color(240,240,240));
 		panel_1.add(textPane);
 
@@ -226,18 +229,18 @@ public class TelaPrincipal extends JApplet {
 				}
 			}
 		});
-		textTempoPercurso.setBounds(121, 106, 26, 20);
+		textTempoPercurso.setBounds(121, 79, 26, 20);
 		panel_1.add(textTempoPercurso);
 		textTempoPercurso.setColumns(10);
 
 		JLabel lblTempoDoPercurso = new JLabel("Tempo do Percurso:");
-		lblTempoDoPercurso.setBounds(20, 106, 101, 22);
+		lblTempoDoPercurso.setBounds(20, 79, 101, 22);
 		panel_1.add(lblTempoDoPercurso);
 
 		JTextPane txtpnMinutos = new JTextPane();
 		txtpnMinutos.setText("Minutos");
 		txtpnMinutos.setBackground(new Color(240,240,240));
-		txtpnMinutos.setBounds(153, 106, 44, 20);
+		txtpnMinutos.setBounds(153, 79, 44, 20);
 		panel_1.add(txtpnMinutos);
 
 		JTextPane txtpnRemoverCaminho = new JTextPane();
@@ -265,6 +268,13 @@ public class TelaPrincipal extends JApplet {
 		btnRemoverLigao.setBounds(45, 562, 129, 23);
 		btnRemoverLigao.addActionListener(new RemoverLigacao());
 		panel_1.add(btnRemoverLigao);
+		
+		alertas = new JTextPane();
+		alertas.setForeground(Color.RED);
+		alertas.setEditable(false);
+		alertas.setBackground(new Color(240,240,240));
+		alertas.setBounds(45, 141, 138, 28);
+		panel_1.add(alertas);
 		//	setSize(Toolkit.getDefaultToolkit().getScreenSize().width-10,Toolkit.getDefaultToolkit().getScreenSize().height-50);
 	}
 
@@ -281,24 +291,37 @@ public class TelaPrincipal extends JApplet {
 		cBdefinirPontoColeta.addItem(novoPonto);
 		cBorigemRemocao.addItem(novoPonto);
 		cBdestinoRemocao.addItem(novoPonto);
+		
 	}
 	public void removerDoComboBox(Ponto ponto){
+		Vertice aRemover = null;
 		try {
-			Vertice removido = controller.removerVertice(ponto.getPonto().getText());
-			cBpontoOrigem.removeItem(removido);
-			cBpontoDestino.removeItem(removido);
-			cBdefinirEstacionamento.removeItem(removido);
-			cBdefinirBanco.removeItem(removido);
-			cBdefinirPontoColeta.removeItem(removido);
-			cBorigemRemocao.removeItem(removido);
-			cBdestinoRemocao.removeItem(removido);
+			aRemover = controller.recuperarPonto(ponto.getPonto().getText());
 			coordenadas.getListaCoordenadas().remove(coordenadas.getListaCoordenadas().indexOf(ponto));
+			controller.removerVertice(ponto.getPonto().getText());	
 		} catch (verticeInexistenteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch(NoSuchElementException | ConcurrentModificationException e){
-			removerDoComboBox(ponto);
-		} 
+		} catch(NoSuchElementException e){
+			if(aRemover != null){
+				cBpontoOrigem.removeItem(aRemover);
+				cBpontoDestino.removeItem(aRemover);
+				cBdefinirEstacionamento.removeItem(aRemover);
+				cBdefinirBanco.removeItem(aRemover);
+				cBdefinirPontoColeta.removeItem(aRemover);
+				cBorigemRemocao.removeItem(aRemover);
+				cBdestinoRemocao.removeItem(aRemover);
+			}
+		}
+			if(aRemover != null){
+			cBpontoOrigem.removeItem(aRemover);
+			cBpontoDestino.removeItem(aRemover);
+			cBdefinirEstacionamento.removeItem(aRemover);
+			cBdefinirBanco.removeItem(aRemover);
+			cBdefinirPontoColeta.removeItem(aRemover);
+			cBorigemRemocao.removeItem(aRemover);
+			cBdestinoRemocao.removeItem(aRemover);
+		}
 	}
 	public void paint(Graphics g){
 		super.paint(g);
@@ -358,12 +381,34 @@ public class TelaPrincipal extends JApplet {
 	public void removerPonto(Ponto ponto){
 		ponto.setEstaNaTela(false);
 	}
+	
+	public void atualizarCaminho(){
+		
+		for(Linha linha:linhas){
+			linha.setParteDoMenorCaminho(false);
+		}	
+	}
 
 	public class gerarCaminhoAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Vertice origem = (Vertice) cBpontoOrigem.getSelectedItem();
 			Vertice destino = (Vertice) cBpontoDestino.getSelectedItem();
+			if(origem.equals(destino)){
+				alertas.setText("Operação não permitida");
+				return;
+			}
+			else{
+				alertas.setText(null);
+			}
+						
+			for(Aresta aresta:origem.getListaAdj()){
+				if(aresta.getDestino().equals(destino)){
+					alertas.setText("Aresta já existente");
+					return;
+				}
+			}
+			
 			int tempo = Integer.parseInt(textTempoPercurso.getText());
 			controller.adicionarCaminho(origem, destino, tempo);
 			Ponto atual;
@@ -397,7 +442,7 @@ public class TelaPrincipal extends JApplet {
 			Vertice pontoDeColeta = (Vertice) cBdefinirPontoColeta.getSelectedItem();
 			Vertice destino = (Vertice) cBdefinirBanco.getSelectedItem();
 			cBmenoresCaminhosPonto.setVisible(false);
-			cBdefinirBanco.setVisible(false);
+			cBmenoresCaminhosBanco.setVisible(false);
 
 			try {
 				menoresCaminhosPonto = controller.calcularMenorCaminho(origem.getIndice(), pontoDeColeta.getIndice());
@@ -496,5 +541,7 @@ public class TelaPrincipal extends JApplet {
 		}
 
 	}
+	
+	
 }
 
