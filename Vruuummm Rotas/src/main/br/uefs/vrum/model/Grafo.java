@@ -21,7 +21,7 @@ public class Grafo {
 		listaVertices.add(vertice);
 	}
 	public void adicionarAresta(Aresta aresta){
-		
+
 		Iterator<Vertice> iterador = listaVertices.iterator();
 		Vertice atual = null;
 		while(iterador.hasNext()){
@@ -37,60 +37,49 @@ public class Grafo {
 	}
 
 	public void removerVertice(Vertice vertice){
+
+		List<Aresta> aRemover = new ArrayList<>();
+		for(Vertice v : listaVertices)
+			if(v.getIndice().equals(vertice.getIndice()))
+				aRemover.addAll(v.getListaAdj());
 		
-		Iterator<Vertice> iterador = listaVertices.iterator();
-		Vertice atual = null;
-		
-		while(iterador.hasNext()){
-			atual = (Vertice) iterador.next();
-			if(atual.getIndice().equals(vertice.getIndice())){
-				Iterator<Aresta> adjacencias = vertice.getListaAdj().iterator();
-				Aresta aRemover = null;
-				while(adjacencias.hasNext()){
-					aRemover = (Aresta)adjacencias.next();
-					removerAresta(aRemover);
-				}
-				
-				iterador.remove();
-			}
-		}
-		//listaVertices.remove(listaVertices.indexOf(vertice));
+		listaVertices.remove(listaVertices.indexOf(vertice));
+		for(Aresta aresta : aRemover)
+			removerAresta(aresta);
 	}
-	
+
 	public void removerAresta(Aresta aresta){
-		
+
 		Iterator<Aresta> iteradorOrigem = aresta.getOrigem().getListaAdj().iterator();
 		Aresta atual = null;
-		
+
 		while(iteradorOrigem.hasNext()){
 			atual = (Aresta)iteradorOrigem.next();
-			if(atual.getDestino().getIndice().equals(aresta.getDestino().getIndice())){
-				iteradorOrigem.remove();
-				break;
-			}
+			if(atual.getDestino().getIndice().equals(aresta.getDestino().getIndice()))
+				break;						
 		}
-		
+		aresta.getOrigem().getListaAdj().remove(atual);
+
 		Iterator<Aresta> iteradorDestino = aresta.getDestino().getListaAdj().iterator();
 		atual = null;
-		
+
 		while(iteradorDestino.hasNext()){
 			atual = (Aresta)iteradorDestino.next();
-			if(atual.getOrigem().getIndice().equals(aresta.getOrigem().getIndice())){
-				iteradorDestino.remove();
-				break;
-			}
+			if(atual.getOrigem().getIndice().equals(aresta.getOrigem().getIndice()))
+				break;				
 		}
+		aresta.getDestino().getListaAdj().remove(atual);
 	}
 	public List<Vertice> getListaVertices() {
 		return listaVertices;
 	}
-	
+
 	public void setListaVertices(List<Vertice> listaVertices) {
 		this.listaVertices = listaVertices;
 	}
-	
+
 	public Vertice recuperarVertice(String nome){
-		
+
 		Iterator<Vertice> iterador = listaVertices.iterator();
 		Vertice procurado = null;
 		while(iterador.hasNext()){
@@ -101,9 +90,9 @@ public class Grafo {
 		}
 		return null;
 	}
-	
+
 	public Aresta recuperarAresta(Vertice origem, Vertice destino){
-		
+
 		Iterator<Aresta> iterador = origem.getListaAdj().iterator();
 		Aresta procurada = null;
 		while(iterador.hasNext()){
@@ -114,9 +103,9 @@ public class Grafo {
 		}
 		return null;
 	}
-	
+
 	public List<List<Vertice>> menorCaminho(int partida,int chegada){
-		
+
 		menoresCaminhos = new ArrayList<List<Integer>>();
 		trajetos = new ArrayList<Trajeto>();
 		matrizAdjacencia = transformaEmMatriz();
@@ -124,9 +113,9 @@ public class Grafo {
 		//int[] anterior = new int[listaVertices.size()];
 		List<Integer> anterior = new ArrayList<Integer>();
 		List<Integer> naoVisitados = new ArrayList<Integer>();
-		
+
 		custo[partida]=0;
-		
+
 		for(int i=0;i<matrizAdjacencia.length;i++){
 			if(i!=partida){
 				custo[i] = Double.MAX_VALUE;
@@ -140,7 +129,7 @@ public class Grafo {
 		trajetoInicial.setCusto(0);
 		trajetos.add(trajetoInicial);
 		anterior.add(-1);
-		
+
 		int indiceVizinhoProximo = 0;
 		while(!naoVisitados.isEmpty()){
 			indiceVizinhoProximo = obterVizinhoProximo(custo, naoVisitados);
@@ -152,10 +141,10 @@ public class Grafo {
 				}
 				index++;
 			}
-			
+
 			naoVisitados.remove(index);
 			List<Integer> vizinhos = encontrarVizinhos(indiceVizinhoProximo);
-			
+
 			for(Integer vizinho: vizinhos){
 				double custoTotal = custo[indiceVizinhoProximo]+ matrizAdjacencia[indiceVizinhoProximo][vizinho];
 				if(custoTotal<=custo[vizinho]){
@@ -168,7 +157,7 @@ public class Grafo {
 					trajetos.add(trajeto);
 				}
 			}
-			
+
 			if(indiceVizinhoProximo == chegada){
 				construirListaMenorCaminho(new ArrayList<>(),indiceVizinhoProximo);
 				return encontrarVerticesMenorCaminho();
@@ -176,7 +165,7 @@ public class Grafo {
 		}	
 		return Collections.emptyList();
 	}
-	
+
 	public List<Integer> encontrarVizinhos(int vertice){
 		List<Integer> vizinhos = new ArrayList<Integer>();
 		for(int j=0;j < matrizAdjacencia[vertice].length;j++){
@@ -187,11 +176,11 @@ public class Grafo {
 		}
 		return vizinhos;
 	}
-	
+
 	public int obterVizinhoProximo(double[]custo,List<Integer> naoVisitados){
 		double pesoMinimo = Double.MAX_VALUE;
 		int indiceMinimo = 0;
-		
+
 		for(Integer i:naoVisitados){
 			if(custo[i] < pesoMinimo){
 				pesoMinimo = custo[i];
@@ -201,16 +190,16 @@ public class Grafo {
 		return indiceMinimo;
 	}
 	public double[][] transformaEmMatriz(){
-		
+
 		double[][] matrizAdj = new double[listaVertices.size()][listaVertices.size()];
-		
+
 		for(int i=0;i<matrizAdj.length;i++){
 			for(int j=0;j<matrizAdj.length;j++){
 				matrizAdj[i][j] = 0;
 				matrizAdj[j][i] = 0;
 			}
 		}
-		
+
 		for(int i=0;i<listaVertices.size();i++){
 			for(int j=0;j<listaVertices.get(i).getListaAdj().size();j++){
 				Vertice procurado = listaVertices.get(i).getListaAdj().get(j).getDestino();
@@ -222,14 +211,14 @@ public class Grafo {
 				} 
 			}
 		}
-		
+
 		return matrizAdj;
 	}
-	
-	
-	
+
+
+
 	public List<Integer> construirListaMenorCaminho(List<Integer> caminho,int vizinhoMaisProximo){
-		
+
 		if(vizinhoMaisProximo == -1){
 			return caminho;
 		}else{
@@ -240,16 +229,16 @@ public class Grafo {
 					if(caminho.get(caminho.size()-1) == trajetos.get(0).getDestino()){
 						menoresCaminhos.add(caminho);
 					}
-					
+
 				}
 			}
 		}
 		Collections.reverse(caminho);
 		return caminho;
-		
+
 	}
 	public List<List<Vertice>> encontrarVerticesMenorCaminho(){
-		
+
 		List<List<Vertice>> verticesMenorCaminho = new ArrayList<>();
 		for(List<Integer> menorCaminho:menoresCaminhos){
 			List<Vertice> caminhoAtual = new ArrayList<>();
@@ -258,7 +247,7 @@ public class Grafo {
 			}
 			verticesMenorCaminho.add(caminhoAtual);
 		}
-		
+
 		return verticesMenorCaminho;
 	}
 }
