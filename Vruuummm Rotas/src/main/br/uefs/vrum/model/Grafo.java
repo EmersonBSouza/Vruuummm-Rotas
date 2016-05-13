@@ -42,10 +42,9 @@ public class Grafo {
 		for(Vertice v : listaVertices)
 			if(v.getIndice().equals(vertice.getIndice()))
 				aRemover.addAll(v.getListaAdj());
-		
-		listaVertices.remove(listaVertices.indexOf(vertice));
 		for(Aresta aresta : aRemover)
 			removerAresta(aresta);
+		listaVertices.remove(listaVertices.indexOf(vertice));
 	}
 
 	public void removerAresta(Aresta aresta){
