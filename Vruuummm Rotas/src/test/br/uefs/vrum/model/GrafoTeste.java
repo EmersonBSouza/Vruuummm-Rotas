@@ -1,7 +1,8 @@
 package br.uefs.vrum.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
@@ -116,63 +117,19 @@ public class GrafoTeste {
 		
 		double[][] matrizRecebida = grafo.transformaEmMatriz();
 	}
-/*	@Test
-	public void menorCaminho(){
-		
-		Vertice novoVertice1 = CriarObjetos.criaVertice("Hogwarts");
-		Vertice novoVertice2 = CriarObjetos.criaVertice("Hogsmead");
-		Vertice novoVertice3 = CriarObjetos.criaVertice("Terra do Nunca");
-		Vertice novoVertice4 = CriarObjetos.criaVertice("El Dorado");
-		Vertice novoVertice5 = CriarObjetos.criaVertice("Ola");
-		Vertice novoVertice6 = CriarObjetos.criaVertice("Alo");
-		Vertice novoVertice7 = CriarObjetos.criaVertice("Lao");
-		Aresta novaAresta = CriarObjetos.criaAresta(novoVertice1, novoVertice2, 1);//1
-		Aresta novaAresta2 = CriarObjetos.criaAresta(novoVertice1, novoVertice3, 1);//2
-		Aresta novaAresta3 = CriarObjetos.criaAresta(novoVertice2, novoVertice4, 1);
-		Aresta novaAresta4 = CriarObjetos.criaAresta(novoVertice3, novoVertice4, 1);
-		Aresta novaAresta5 = CriarObjetos.criaAresta(novoVertice4, novoVertice5, 1);
-		Aresta novaAresta6 = CriarObjetos.criaAresta(novoVertice4, novoVertice6, 1);
-		Aresta novaAresta7 = CriarObjetos.criaAresta(novoVertice5, novoVertice7, 1);
-		Aresta novaAresta8 = CriarObjetos.criaAresta(novoVertice6, novoVertice7, 1);
-		grafo.adicionarVertice(novoVertice1);
-		grafo.adicionarVertice(novoVertice2);
-		grafo.adicionarVertice(novoVertice3);
-		grafo.adicionarVertice(novoVertice4);
-		grafo.adicionarVertice(novoVertice5);
-		grafo.adicionarVertice(novoVertice6);
-		grafo.adicionarVertice(novoVertice7);
-		grafo.adicionarAresta(novaAresta);
-		grafo.adicionarAresta(novaAresta2);
-		grafo.adicionarAresta(novaAresta3);
-		grafo.adicionarAresta(novaAresta4);
-		grafo.adicionarAresta(novaAresta5);
-		grafo.adicionarAresta(novaAresta6);
-		grafo.adicionarAresta(novaAresta7);
-		grafo.adicionarAresta(novaAresta8);
 	
-		List<Integer>menorCaminho = grafo.menorCaminho(0,6);
-		//double[][]menorCaminho = grafo.FloydWarshall();
-	}*/
-
-
 	@Test
-	public void menoresCaminhos(){
+	public void calcularTodosMenoresCaminhos(){
 
-		Vertice novoVertice1 = CriarObjetos.criaVertice("Hogwarts");
-		Vertice novoVertice2 = CriarObjetos.criaVertice("Hogsmead");
-		Vertice novoVertice3 = CriarObjetos.criaVertice("Terra do Nunca");
+		Vertice novoVertice1 = CriarObjetos.criaVertice("The Talisman");
+		Vertice novoVertice2 = CriarObjetos.criaVertice("The Wicker Man");
+		Vertice novoVertice3 = CriarObjetos.criaVertice("Dance of Death");
 		Vertice novoVertice4 = CriarObjetos.criaVertice("El Dorado");
-		Vertice novoVertice5 = CriarObjetos.criaVertice("Final Frontier");
+		Vertice novoVertice5 = CriarObjetos.criaVertice("The Final Frontier");
 		Vertice novoVertice6 = CriarObjetos.criaVertice("Fear of the Dark");
 		Vertice novoVertice7 = CriarObjetos.criaVertice("The Trooper");
 		Vertice novoVertice8 = CriarObjetos.criaVertice("2 Minutes to Midnight");
 		Vertice novoVertice9 = CriarObjetos.criaVertice("Satellite 16");
-//		Aresta novaAresta = CriarObjetos.criaAresta(novoVertice1, novoVertice2, 1);//1
-//		Aresta novaAresta2 = CriarObjetos.criaAresta(novoVertice1, novoVertice3, 1);//2
-//		Aresta novaAresta3 = CriarObjetos.criaAresta(novoVertice1, novoVertice4, 1);
-//		Aresta novaAresta4 = CriarObjetos.criaAresta(novoVertice2, novoVertice5, 1);
-//		Aresta novaAresta5 = CriarObjetos.criaAresta(novoVertice3, novoVertice5, 1);
-//		Aresta novaAresta6 = CriarObjetos.criaAresta(novoVertice4, novoVertice5, 1);
 		
 		Aresta novaAresta = CriarObjetos.criaAresta(novoVertice1, novoVertice2, 1);//1
 		Aresta novaAresta2 = CriarObjetos.criaAresta(novoVertice2, novoVertice3, 1);//2
@@ -184,7 +141,7 @@ public class GrafoTeste {
 		Aresta novaAresta8 = CriarObjetos.criaAresta(novoVertice6, novoVertice8, 1);
 		Aresta novaAresta9 = CriarObjetos.criaAresta(novoVertice7, novoVertice9, 1);
 		Aresta novaAresta10 = CriarObjetos.criaAresta(novoVertice8, novoVertice9, 1);
-
+		
 		grafo.adicionarVertice(novoVertice1);
 		grafo.adicionarVertice(novoVertice2);
 		grafo.adicionarVertice(novoVertice3);
@@ -205,7 +162,83 @@ public class GrafoTeste {
 		grafo.adicionarAresta(novaAresta9);
 		grafo.adicionarAresta(novaAresta10);
 
-		List<Integer>menorCaminho = grafo.menorCaminho(0,8);
-		//double[][]menorCaminho = grafo.FloydWarshall();
+		
+		Vertice[] vetor1 = {novoVertice1,novoVertice2,novoVertice3,novoVertice5,novoVertice6,novoVertice7,novoVertice9};
+		List<Vertice> caminho1 = new ArrayList<Vertice>();
+		for(int i = 0; i<vetor1.length;i++){
+			caminho1.add(vetor1[i]);
+		}
+		
+		Vertice[] vetor2 = {novoVertice1,novoVertice2,novoVertice3,novoVertice4,novoVertice6,novoVertice8,novoVertice9};
+		List<Vertice> caminho2 = new ArrayList<Vertice>();
+		for(int i = 0; i<vetor2.length;i++){
+			caminho2.add(vetor2[i]);
+		}
+		Vertice[] vetor3 = {novoVertice1,novoVertice2,novoVertice3,novoVertice4,novoVertice6,novoVertice7,novoVertice9};
+		List<Vertice> caminho3 = new ArrayList<Vertice>();
+		for(int i = 0; i<vetor3.length;i++){
+			caminho3.add(vetor3[i]);
+		}
+		Vertice[] vetor4 = {novoVertice1,novoVertice2,novoVertice3,novoVertice5,novoVertice6,novoVertice8,novoVertice9};
+		List<Vertice> caminho4 = new ArrayList<Vertice>();
+		for(int i = 0; i<vetor4.length;i++){
+			caminho4.add(vetor4[i]);
+		}
+		
+		List<List<Vertice>> menoresCaminhos = grafo.menorCaminho(0,8);
+		int contador = 0;
+		for(List<Vertice> menorCaminho:menoresCaminhos){
+			if(menorCaminho.equals(caminho1)||menorCaminho.equals(caminho2)||menorCaminho.equals(caminho3)||menorCaminho.equals(caminho4)){
+				contador++;
+			}
+		}
+		assertEquals(contador,4);
+	}
+	
+	@Test
+	public void calcularMenorCaminhoSucesso() {
+
+		Grafo grafo = CriarObjetos.criarGrafo1();
+		List<Vertice> menorCaminho = new ArrayList<Vertice>();
+		Vertice origem = grafo.recuperarVertice("A");
+		Vertice destino = grafo.recuperarVertice("F");
+		List<List<Vertice>> caminhoObtido = grafo.menorCaminho(0, 5);
+
+
+		menorCaminho.add(CriarObjetos.criaVertice("A"));
+		//menorCaminho.add(0);				
+		menorCaminho.add(CriarObjetos.criaVertice("E"));
+		//menorCaminho.add(4);
+		menorCaminho.add(CriarObjetos.criaVertice("B"));
+		//menorCaminho.add(1);
+		menorCaminho.add(CriarObjetos.criaVertice("F"));
+		//menorCaminho.add(5);
+
+		if(menorCaminho.equals(caminhoObtido.get(0))){
+			assertTrue(true);
+		}
+	}
+	
+	@Test
+	public void calcularMenorCaminhoSucesso2() {
+		
+		Grafo grafo = CriarObjetos.criarGrafo2();
+
+		List<Vertice> menorCaminho = new ArrayList<Vertice>();
+		Vertice origem = grafo.recuperarVertice("A");
+		Vertice destino = grafo.recuperarVertice("D");
+		List<List<Vertice>> caminhoObtido = grafo.menorCaminho(0, 3);
+
+
+		menorCaminho.add(CriarObjetos.criaVertice("A"));
+		menorCaminho.add(CriarObjetos.criaVertice("E"));
+		menorCaminho.add(CriarObjetos.criaVertice("B"));
+		menorCaminho.add(CriarObjetos.criaVertice("C"));
+		menorCaminho.add(CriarObjetos.criaVertice("G"));
+		menorCaminho.add(CriarObjetos.criaVertice("D"));
+		
+		if(menorCaminho.equals(caminhoObtido.get(0))){
+			assertTrue(true);
+		}
 	}
 }
