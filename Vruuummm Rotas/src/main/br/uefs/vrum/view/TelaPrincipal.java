@@ -441,6 +441,8 @@ public class TelaPrincipal extends JApplet {
 			Vertice origem = (Vertice) cBdefinirEstacionamento.getSelectedItem();
 			Vertice pontoDeColeta = (Vertice) cBdefinirPontoColeta.getSelectedItem();
 			Vertice destino = (Vertice) cBdefinirBanco.getSelectedItem();
+			cBmenoresCaminhosBanco.removeAllItems();
+			cBmenoresCaminhosPonto.removeAllItems();
 			cBmenoresCaminhosPonto.setVisible(false);
 			cBmenoresCaminhosBanco.setVisible(false);
 
@@ -505,7 +507,7 @@ public class TelaPrincipal extends JApplet {
 				l.setParteDoMenorCaminho(false);
 
 			for(Linha l : linhas) {
-				for(Vertice v : caminho) {
+				for(int x = 0; x < caminho.size() ; x++) {
 					int posicaoAtual = 0;
 					Vertice[] vetorCaminho = (Vertice[]) caminho.toArray(new Vertice[caminho.size()]);
 					while((posicaoAtual<vetorCaminho.length-1)) {
