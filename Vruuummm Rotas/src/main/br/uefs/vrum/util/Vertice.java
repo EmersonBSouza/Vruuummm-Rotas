@@ -11,27 +11,30 @@ public class Vertice {
 	
 	public Vertice(String indice){
 		this.indice = indice;
-		foiVisitado = false;
 		setListaAdj(new ArrayList<Aresta>());
 	}
 	
+	/**Retorna o índice do vértice
+	 * @return String indice*/
 	public String getIndice() {
 		return indice;
 	}
+	/**
+	 * Atribui um indice ao vértice
+	 * @param String indice*/
 	public void setIndice(String indice) {
 		this.indice = indice;
 	}
-	public boolean isFoiVisitado() {
-		return foiVisitado;
-	}
-	public void setFoiVisitado(boolean foiVisitado) {
-		this.foiVisitado = foiVisitado;
-	}
-
+	/**
+	 * Retorna a lista de adjacências do vértice
+	 * @return List<Aresta> listaAdj - retorna uma lista de arestas*/
 	public List<Aresta> getListaAdj() {
 		return listaAdj;
 	}
 
+	/**
+	 * Atribui uma lista de adjacências ao vértice
+	 * @param List<Aresta> listaAdj*/
 	public void setListaAdj(List<Aresta> listaAdj) {
 		this.listaAdj = listaAdj;
 	}
