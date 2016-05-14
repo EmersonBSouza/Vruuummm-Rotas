@@ -506,17 +506,19 @@ public class TelaPrincipal extends JApplet {
 
 		@Override
 		public void itemStateChanged(ItemEvent arg0) {
+			List<Vertice> menorCaminho = new ArrayList<>();
 			List<Vertice> caminho = (List<Vertice>) cBmenoresCaminhosPonto.getSelectedItem();
 			List<Vertice> caminho2 = (List<Vertice>) cBmenoresCaminhosBanco.getSelectedItem();
-			caminho.addAll(caminho2);
+			menorCaminho.addAll(caminho);
+			menorCaminho.addAll(caminho2);
 
 			for(Linha l : linhas)
 				l.setParteDoMenorCaminho(false);
 
 			for(Linha l : linhas) {
-				for(int x = 0; x < caminho.size() ; x++) {
+				for(int x = 0; x < menorCaminho.size() ; x++) {
 					int posicaoAtual = 0;
-					Vertice[] vetorCaminho = (Vertice[]) caminho.toArray(new Vertice[caminho.size()]);
+					Vertice[] vetorCaminho = (Vertice[]) menorCaminho.toArray(new Vertice[menorCaminho.size()]);
 					while((posicaoAtual<vetorCaminho.length-1)) {
 						if(vetorCaminho[posicaoAtual].getIndice().equals(l.getNomePonto1()) && vetorCaminho[posicaoAtual+1].getIndice().equals(l.getNomePonto2()) 
 								|| vetorCaminho[posicaoAtual].getIndice().equals(l.getNomePonto2()) && vetorCaminho[posicaoAtual+1].getIndice().equals(l.getNomePonto1()))
