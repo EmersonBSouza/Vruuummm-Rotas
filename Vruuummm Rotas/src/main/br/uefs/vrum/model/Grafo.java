@@ -13,13 +13,23 @@ public class Grafo {
 	private double[][] matrizAdjacencia;
 	private List<List<Integer>> menoresCaminhos;
 	List<Trajeto> trajetos;
+	
 	public Grafo(){
 		setListaVertices(new ArrayList<Vertice>());	
 	}
 
+	/**
+	 * Este método adiciona um vértice ao grafo
+	 * @param Vertice vertice - Recebe um vértice
+	 * */
 	public void adicionarVertice(Vertice vertice){
 		listaVertices.add(vertice);
 	}
+	
+	/**
+	 * Este método adiciona uma aresta ao grafo
+	 * @param Aresta aresta - Recebe uma aresta
+	 * */
 	public void adicionarAresta(Aresta aresta){
 
 		Iterator<Vertice> iterador = listaVertices.iterator();
@@ -36,6 +46,10 @@ public class Grafo {
 		}		
 	}
 
+	/**
+	 * Este método remove um vértice do grafo
+	 * @param Vertice vertice - Recebe o vértice a ser removido
+	 * */
 	public void removerVertice(Vertice vertice){
 
 		List<Aresta> aRemover = new ArrayList<>();
@@ -47,6 +61,10 @@ public class Grafo {
 		listaVertices.remove(listaVertices.indexOf(vertice));
 	}
 
+	/**
+	 * Este método remove uma aresta do grafo
+	 * @param Aresta aresta - Recebe a aresta a ser removida
+	 * */
 	public void removerAresta(Aresta aresta){
 
 		Iterator<Aresta> iteradorOrigem = aresta.getOrigem().getListaAdj().iterator();
@@ -69,6 +87,7 @@ public class Grafo {
 		}
 		aresta.getDestino().getListaAdj().remove(atual);
 	}
+	
 	public List<Vertice> getListaVertices() {
 		return listaVertices;
 	}
@@ -77,6 +96,10 @@ public class Grafo {
 		this.listaVertices = listaVertices;
 	}
 
+	/**
+	 * Este método recupera um vértice do grafo
+	 * @param String nome - Recebe o nome do vértice desejado
+	 * @return procurado - Retorna o vértice procurado*/
 	public Vertice recuperarVertice(String nome){
 
 		Iterator<Vertice> iterador = listaVertices.iterator();
@@ -90,6 +113,11 @@ public class Grafo {
 		return null;
 	}
 
+	/**
+	 * Este método recupera uma aresta do grafo
+	 * @param Vertice origem - Recebem um vértice de origem
+	 * @param Vertice destino - Recebe um vértice de destino
+	 * @return Aresta procurada - Retorna a aresta desejada*/
 	public Aresta recuperarAresta(Vertice origem, Vertice destino){
 
 		Iterator<Aresta> iterador = origem.getListaAdj().iterator();
@@ -103,13 +131,17 @@ public class Grafo {
 		return null;
 	}
 
+	/**
+	 * Este método calcula o(s) menor(es) caminho(s) entre dois pontos
+	 * @param int partida - Recebe o ponto inicial
+	 * @param int chegada - Recebe o ponto final
+	 * @return List<List<Vertice>> menoresCaminhos - Retorna uma lista de menores caminhos*/
 	public List<List<Vertice>> menorCaminho(int partida,int chegada){
 
 		menoresCaminhos = new ArrayList<List<Integer>>();
 		trajetos = new ArrayList<Trajeto>();
 		matrizAdjacencia = transformaEmMatriz();
 		double custo[] = new double[listaVertices.size()];
-		//int[] anterior = new int[listaVertices.size()];
 		List<Integer> anterior = new ArrayList<Integer>();
 		List<Integer> naoVisitados = new ArrayList<Integer>();
 
@@ -119,7 +151,6 @@ public class Grafo {
 			if(i!=partida){
 				custo[i] = Double.MAX_VALUE;
 			}
-			//anterior[i] = -1;
 			naoVisitados.add(i);
 		}
 		Trajeto trajetoInicial = new Trajeto();
@@ -164,7 +195,10 @@ public class Grafo {
 		}	
 		return Collections.emptyList();
 	}
-
+	/**
+	 * Este método encontra os vértices mais próximos de determinado vértice
+	 * @param int vertice - Recebe o vértice principal
+	 * @return List<Integer> vizinhos - Retorna uma lista de vértices vizinhos do vértice principal*/
 	public List<Integer> encontrarVizinhos(int vertice){
 		List<Integer> vizinhos = new ArrayList<Integer>();
 		for(int j=0;j < matrizAdjacencia[vertice].length;j++){
@@ -176,6 +210,11 @@ public class Grafo {
 		return vizinhos;
 	}
 
+	/**
+	 * Este método verifica o vértice mais próximo 
+	 * @param double[] custo - Recebe o custo do valor
+	 * @param List<Integer> naoVisitados - Recebe uma lista de vértices não visitados
+	 * @return int indiceMinimo - Retorna o vértice mais próximo*/
 	public int obterVizinhoProximo(double[]custo,List<Integer> naoVisitados){
 		double pesoMinimo = Double.MAX_VALUE;
 		int indiceMinimo = 0;
@@ -188,6 +227,10 @@ public class Grafo {
 		}
 		return indiceMinimo;
 	}
+	
+	/**
+	 * Este método converte a lista de adjacências em uma matriz de adjacências
+	 * @return double[][] matrizAdj - Retorna uma matriz com custos */
 	public double[][] transformaEmMatriz(){
 
 		double[][] matrizAdj = new double[listaVertices.size()][listaVertices.size()];
@@ -215,9 +258,12 @@ public class Grafo {
 	}
 
 
-
+	/**
+	 * Este método constrói as listas com os menores caminhos possíveis
+	 * @param List<Integer> caminho - Recebe uma arrayList
+	 * @param int vizinhoMaisProximo - Recebe o vértice mais próximo da posição atual
+	 * @return List<Integer> - Retorna uma lista de vértices*/
 	public List<Integer> construirListaMenorCaminho(List<Integer> caminho,int vizinhoMaisProximo){
-
 		if(vizinhoMaisProximo == -1){
 			return caminho;
 		}else{
@@ -234,8 +280,12 @@ public class Grafo {
 		}
 		Collections.reverse(caminho);
 		return caminho;
-
 	}
+	
+	/**
+	 * Este método encontra o vértice através do seu índice na matriz de adjacência
+	 * @return List<List<Vertice>> verticesMenorCaminho
+	 * */
 	public List<List<Vertice>> encontrarVerticesMenorCaminho(){
 
 		List<List<Vertice>> verticesMenorCaminho = new ArrayList<>();
