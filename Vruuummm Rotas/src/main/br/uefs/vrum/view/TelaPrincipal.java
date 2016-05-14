@@ -147,14 +147,16 @@ public class TelaPrincipal extends JApplet {
 		panel_1.add(btnCalcularMenorRota);
 
 		cBmenoresCaminhosPonto = new JComboBox<List<Vertice>>();
+		cBmenoresCaminhosPonto.setSize(100, 20);
+		cBmenoresCaminhosPonto.setLocation(63, 410);
 		cBmenoresCaminhosPonto.setToolTipText("Escolha o caminho que deseja visualizar");
-		cBmenoresCaminhosPonto.setVisible(false);
 		cBmenoresCaminhosPonto.addItemListener(new ExibirCaminhoAction());
 		panel_1.add(cBmenoresCaminhosPonto);
 
 		cBmenoresCaminhosBanco = new JComboBox<List<Vertice>>();
+		cBmenoresCaminhosBanco.setSize(100, 20);
+		cBmenoresCaminhosBanco.setLocation(63, 461);
 		cBmenoresCaminhosBanco.setToolTipText("Escolha o caminho que deseja visualizar");
-		cBmenoresCaminhosBanco.setVisible(false);
 		cBmenoresCaminhosBanco.addItemListener(new ExibirCaminhoAction());
 		panel_1.add(cBmenoresCaminhosBanco);
 
