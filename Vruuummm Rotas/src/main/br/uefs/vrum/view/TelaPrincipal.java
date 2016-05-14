@@ -48,7 +48,6 @@ public class TelaPrincipal extends JApplet {
 	private static final long serialVersionUID = 1L;
 
 	public CoordenadasGUI coordenadas = CoordenadasGUI.getInstance();
-	public List<Vertice> menorCaminho = new ArrayList<Vertice>();
 	public List<Linha> linhas = new ArrayList<Linha>();
 	public List<Linha> linhasVizinhas;
 	public ImageIcon iconePonto = new ImageIcon(TelaPrincipal.class.getResource("/br/uefs/vrum/view/icone_Ponto.png"));
@@ -445,6 +444,7 @@ public class TelaPrincipal extends JApplet {
 			Vertice origem = (Vertice) cBdefinirEstacionamento.getSelectedItem();
 			Vertice pontoDeColeta = (Vertice) cBdefinirPontoColeta.getSelectedItem();
 			Vertice destino = (Vertice) cBdefinirBanco.getSelectedItem();
+			List<Vertice> caminho = new ArrayList<>();
 			cBmenoresCaminhosBanco.removeAllItems();
 			cBmenoresCaminhosPonto.removeAllItems();
 			cBmenoresCaminhosPonto.setVisible(false);
@@ -466,7 +466,7 @@ public class TelaPrincipal extends JApplet {
 			else if(menoresCaminhosPonto.size() == 0)
 				JOptionPane.showMessageDialog(null, "Impossível chegar ao Ponto de Coleta a partir do estacionamento!");
 
-			menorCaminho = menoresCaminhosPonto.get(0);
+			caminho.addAll(menoresCaminhosPonto.get(0));
 
 			try {
 				menoresCaminhosBanco = controller.calcularMenorCaminho(pontoDeColeta.getIndice(), destino.getIndice());
@@ -484,12 +484,12 @@ public class TelaPrincipal extends JApplet {
 			else if(menoresCaminhosBanco.size() == 0)
 				JOptionPane.showMessageDialog(null, "Impossível chegar ao Banco a partir do Ponto de Coleta");
 
-			menorCaminho.addAll(menoresCaminhosBanco.get(0));
+			caminho.addAll(menoresCaminhosBanco.get(0));
 
 			for(Linha l : linhas) {
-				for(Vertice v : menorCaminho) {
+				for(Vertice v : caminho) {
 					int posicaoAtual = 0;
-					Vertice[] vetorMenorCaminho = (Vertice[]) menorCaminho.toArray(new Vertice[menorCaminho.size()]);
+					Vertice[] vetorMenorCaminho = (Vertice[]) caminho.toArray(new Vertice[caminho.size()]);
 					while((posicaoAtual<vetorMenorCaminho.length-1)) {
 						if(vetorMenorCaminho[posicaoAtual].getIndice().equals(l.getNomePonto1()) && vetorMenorCaminho[posicaoAtual+1].getIndice().equals(l.getNomePonto2()) 
 							|| vetorMenorCaminho[posicaoAtual].getIndice().equals(l.getNomePonto2()) && vetorMenorCaminho[posicaoAtual+1].getIndice().equals(l.getNomePonto1()))
