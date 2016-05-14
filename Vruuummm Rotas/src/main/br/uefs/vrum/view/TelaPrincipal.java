@@ -150,6 +150,7 @@ public class TelaPrincipal extends JApplet {
 		cBmenoresCaminhosPonto.setLocation(63, 410);
 		cBmenoresCaminhosPonto.setToolTipText("Escolha o caminho que deseja visualizar");
 		cBmenoresCaminhosPonto.addActionListener(new ExibirCaminhoAction());
+		cBmenoresCaminhosPonto.addItemListener(new ExibirCaminhoListener());
 		panel_1.add(cBmenoresCaminhosPonto);
 
 		cBmenoresCaminhosBanco = new JComboBox<List<Vertice>>();
@@ -157,6 +158,7 @@ public class TelaPrincipal extends JApplet {
 		cBmenoresCaminhosBanco.setLocation(63, 461);
 		cBmenoresCaminhosBanco.setToolTipText("Escolha o caminho que deseja visualizar");
 		cBmenoresCaminhosBanco.addActionListener(new ExibirCaminhoAction());
+		cBmenoresCaminhosBanco.addItemListener(new ExibirCaminhoListener());
 		panel_1.add(cBmenoresCaminhosBanco);
 
 		JTextPane txtAdicionarCaminho = new JTextPane();
@@ -524,6 +526,16 @@ public class TelaPrincipal extends JApplet {
 			definirCaminho();
 			repaint();
 		}
+	}
+	
+	public class ExibirCaminhoListener implements ItemListener {
+
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			definirCaminho();
+			repaint();			
+		}
+
 	}
 
 	public class RemoverLigacao implements ActionListener{
