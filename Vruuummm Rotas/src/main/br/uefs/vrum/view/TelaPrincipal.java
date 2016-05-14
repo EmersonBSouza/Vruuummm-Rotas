@@ -152,7 +152,7 @@ public class TelaPrincipal extends JApplet {
 
 		cBmenoresCaminhos = new JComboBox<List<Vertice>>();
 		cBmenoresCaminhos.setSize(100, 20);
-		cBmenoresCaminhos.setLocation(63, 410);
+		cBmenoresCaminhos.setLocation(63, 428);
 		cBmenoresCaminhos.setToolTipText("Escolha o caminho que deseja visualizar");
 		cBmenoresCaminhos.addActionListener(new ExibirCaminhoAction());
 		panel_1.add(cBmenoresCaminhos);
@@ -203,6 +203,7 @@ public class TelaPrincipal extends JApplet {
 		panel_1.add(cBdefinirPontoColeta);
 
 		JTextPane txtpnDefinirBanco = new JTextPane();
+		txtpnDefinirBanco.setEditable(false);
 		txtpnDefinirBanco.setText("Definir Banco");
 		txtpnDefinirBanco.setBackground(new Color(240,240,240));
 		txtpnDefinirBanco.setBounds(72, 285, 78, 20);
@@ -245,6 +246,7 @@ public class TelaPrincipal extends JApplet {
 		panel_1.add(txtpnMinutos);
 
 		JTextPane txtpnRemoverCaminho = new JTextPane();
+		txtpnRemoverCaminho.setEditable(false);
 		txtpnRemoverCaminho.setText("Remover Caminho");
 		txtpnRemoverCaminho.setBounds(70, 492, 99, 20);
 		txtpnRemoverCaminho.setBackground(new Color(240,240,240));
@@ -276,6 +278,13 @@ public class TelaPrincipal extends JApplet {
 		alertas.setBackground(new Color(240,240,240));
 		alertas.setBounds(45, 141, 138, 28);
 		panel_1.add(alertas);
+		
+		JTextPane txtpnMenoresCaminhos = new JTextPane();
+		txtpnMenoresCaminhos.setText("Menor(es) Caminho(s)");
+		txtpnMenoresCaminhos.setEditable(false);
+		txtpnMenoresCaminhos.setBackground(new Color(240,240,240));
+		txtpnMenoresCaminhos.setBounds(55, 397, 112, 20);
+		panel_1.add(txtpnMenoresCaminhos);
 		//	setSize(Toolkit.getDefaultToolkit().getScreenSize().width-10,Toolkit.getDefaultToolkit().getScreenSize().height-50);
 	}
 
@@ -483,7 +492,7 @@ public class TelaPrincipal extends JApplet {
 			if(menoresCaminhosBanco.size() == 0)
 				JOptionPane.showMessageDialog(null, "Impossível chegar ao Banco a partir do Ponto de Coleta");
 
-			if( (menoresCaminhosBanco.size() > 1) || (menoresCaminhosPonto.size() > 1))
+			if( (menoresCaminhosBanco.size() >= 0) || (menoresCaminhosPonto.size() >= 0))
 				cBmenoresCaminhos.setVisible(true);
 			
 			for(List<Vertice> caminho1 : menoresCaminhosPonto) {
@@ -518,8 +527,12 @@ public class TelaPrincipal extends JApplet {
 			linhasVizinhas = new ArrayList<>();
 			Vertice origem = (Vertice) cBorigemRemocao.getSelectedItem();
 			Vertice destino = (Vertice)cBdestinoRemocao.getSelectedItem();
-			if(origem.equals(destino)){
+			
+			atualizarCaminho();
+			
+			if(origem.getIndice().equals(destino.getIndice())){
 				alertas.setText("Operação não permitida");
+				return;
 			}else{
 				alertas.setText(null);
 			}
@@ -538,7 +551,5 @@ public class TelaPrincipal extends JApplet {
 		}
 
 	}
-
-
 }
 
