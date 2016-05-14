@@ -103,6 +103,12 @@ public class TelaPrincipal extends JApplet {
 				if((arg0.getModifiers() & MouseEvent.BUTTON1_MASK)!=0){
 					Point posicaoMouse = getContentPane().getMousePosition();
 					String nome = JOptionPane.showInputDialog("Insira o nome do novo local:");
+					if(nome.trim().equals("")|| nome == null){
+						alertas.setText("Campo não preenchido");
+						return;
+					}else{
+						alertas.setText(null);
+					}
 					for(Vertice v : controller.getGrafo().getListaVertices())
 						if(v.getIndice().equals(nome)) {
 							JOptionPane.showMessageDialog(null, "Já foi cadastrado um local com esse nome!");
@@ -297,17 +303,7 @@ public class TelaPrincipal extends JApplet {
 		} catch (verticeInexistenteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch(NoSuchElementException e){
-			if(aRemover != null){
-				cBpontoOrigem.removeItem(aRemover);
-				cBpontoDestino.removeItem(aRemover);
-				cBdefinirEstacionamento.removeItem(aRemover);
-				cBdefinirBanco.removeItem(aRemover);
-				cBdefinirPontoColeta.removeItem(aRemover);
-				cBorigemRemocao.removeItem(aRemover);
-				cBdestinoRemocao.removeItem(aRemover);
-			}
-		}
+		} 
 		if(aRemover != null){
 			cBpontoOrigem.removeItem(aRemover);
 			cBpontoDestino.removeItem(aRemover);
@@ -378,7 +374,6 @@ public class TelaPrincipal extends JApplet {
 	}
 
 	public void atualizarCaminho(){
-
 		for(Linha linha:linhas){
 			linha.setParteDoMenorCaminho(false);
 		}	
@@ -389,7 +384,7 @@ public class TelaPrincipal extends JApplet {
 		public void actionPerformed(ActionEvent e) {
 			Vertice origem = (Vertice) cBpontoOrigem.getSelectedItem();
 			Vertice destino = (Vertice) cBpontoDestino.getSelectedItem();
-			if(origem.equals(destino)){
+			if(origem.getIndice().equals(destino.getIndice())){
 				alertas.setText("Operação não permitida");
 				return;
 			}
@@ -404,7 +399,15 @@ public class TelaPrincipal extends JApplet {
 				}
 			}
 
-			int tempo = Integer.parseInt(textTempoPercurso.getText());
+			int tempo = 0;
+			
+			try{
+				tempo = Integer.parseInt(textTempoPercurso.getText());
+				alertas.setText(null);
+			}catch(NumberFormatException f){
+				alertas.setText("Campo não preenchido");
+				return;
+			}
 			controller.adicionarCaminho(origem, destino, tempo);
 			Ponto atual;
 			Iterator<Ponto> iterador = coordenadas.getListaCoordenadas().iterator();
@@ -454,6 +457,7 @@ public class TelaPrincipal extends JApplet {
 
 	public class CalcularMenorCaminhoAction implements ActionListener {
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			Vertice origem = (Vertice) cBdefinirEstacionamento.getSelectedItem();
 			Vertice pontoDeColeta = (Vertice) cBdefinirPontoColeta.getSelectedItem();
@@ -492,6 +496,7 @@ public class TelaPrincipal extends JApplet {
 			}
 
 			cBmenoresCaminhos.setSelectedItem(0);
+			atualizarCaminho();
 			definirCaminho();
 			repaint();
 		}
@@ -513,6 +518,11 @@ public class TelaPrincipal extends JApplet {
 			linhasVizinhas = new ArrayList<>();
 			Vertice origem = (Vertice) cBorigemRemocao.getSelectedItem();
 			Vertice destino = (Vertice)cBdestinoRemocao.getSelectedItem();
+			if(origem.equals(destino)){
+				alertas.setText("Operação não permitida");
+			}else{
+				alertas.setText(null);
+			}
 			for(Linha linha : linhas){
 				if(linha.getNomePonto1().equals(origem.getIndice())|| linha.getNomePonto2().equals(origem.getIndice())){
 					if(linha.getNomePonto1().equals(destino.getIndice())|| linha.getNomePonto2().equals(destino.getIndice())){
