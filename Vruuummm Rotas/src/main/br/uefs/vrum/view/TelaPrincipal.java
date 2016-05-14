@@ -460,6 +460,7 @@ public class TelaPrincipal extends JApplet {
 				}
 			}
 		}
+		repaint();
 	}
 
 	public class CalcularMenorCaminhoAction implements ActionListener {
