@@ -63,8 +63,8 @@ public class TelaPrincipal extends JApplet {
 	private JComboBox<Vertice> cBorigemRemocao;
 	private List<List<Vertice>> menoresCaminhosPonto;
 	private List<List<Vertice>> menoresCaminhosBanco;
-	private JComboBox<List<List<Vertice>>> cBmenoresCaminhosPonto;
-	private JComboBox<List<List<Vertice>>> cBmenoresCaminhosBanco;
+	private JComboBox<List<Vertice>> cBmenoresCaminhosPonto;
+	private JComboBox<List<Vertice>> cBmenoresCaminhosBanco;
 	private JTextField textTempoPercurso;
 
 
@@ -144,13 +144,13 @@ public class TelaPrincipal extends JApplet {
 		btnCalcularMenorRota.addActionListener(new CalcularMenorCaminhoAction());
 		panel_1.add(btnCalcularMenorRota);
 
-		cBmenoresCaminhosPonto = new JComboBox<List<List<Vertice>>>();
+		cBmenoresCaminhosPonto = new JComboBox<List<Vertice>>();
 		cBmenoresCaminhosPonto.setToolTipText("Escolha o caminho que deseja visualizar");
 		cBmenoresCaminhosPonto.setVisible(false);
 		cBmenoresCaminhosPonto.addActionListener(new ExibirCaminhoAction());
 		panel_1.add(cBmenoresCaminhosPonto);
 
-		cBmenoresCaminhosBanco = new JComboBox<List<List<Vertice>>>();
+		cBmenoresCaminhosBanco = new JComboBox<List<Vertice>>();
 		cBmenoresCaminhosBanco.setToolTipText("Escolha o caminho que deseja visualizar");
 		cBmenoresCaminhosBanco.setVisible(false);
 		cBmenoresCaminhosBanco.addActionListener(new ExibirCaminhoAction());
@@ -454,7 +454,8 @@ public class TelaPrincipal extends JApplet {
 
 			if (menoresCaminhosPonto.size() > 1) {
 				cBmenoresCaminhosPonto.setVisible(true);
-				cBmenoresCaminhosPonto.addItem(menoresCaminhosPonto);
+				for(List<Vertice> c : menoresCaminhosPonto)
+					cBmenoresCaminhosPonto.addItem(c);
 				cBmenoresCaminhosPonto.setSelectedItem(menoresCaminhosPonto.get(0));
 			}
 
@@ -471,7 +472,8 @@ public class TelaPrincipal extends JApplet {
 
 			if (menoresCaminhosBanco.size() > 1) {
 				cBmenoresCaminhosBanco.setVisible(true);
-				cBmenoresCaminhosBanco.addItem(menoresCaminhosBanco);
+				for(List<Vertice> c : menoresCaminhosBanco)
+					cBmenoresCaminhosBanco.addItem(c);
 				cBmenoresCaminhosBanco.setSelectedItem(menoresCaminhosBanco.get(0));
 			}
 
@@ -485,7 +487,8 @@ public class TelaPrincipal extends JApplet {
 					int posicaoAtual = 0;
 					Vertice[] vetorMenorCaminho = (Vertice[]) menorCaminho.toArray(new Vertice[menorCaminho.size()]);
 					while((posicaoAtual<vetorMenorCaminho.length-1)) {
-						if(vetorMenorCaminho[posicaoAtual].getIndice().equals(l.getNomePonto1()) && vetorMenorCaminho[posicaoAtual+1].getIndice().equals(l.getNomePonto2()))
+						if(vetorMenorCaminho[posicaoAtual].getIndice().equals(l.getNomePonto1()) && vetorMenorCaminho[posicaoAtual+1].getIndice().equals(l.getNomePonto2()) 
+							|| vetorMenorCaminho[posicaoAtual].getIndice().equals(l.getNomePonto2()) && vetorMenorCaminho[posicaoAtual+1].getIndice().equals(l.getNomePonto1()))
 							l.setParteDoMenorCaminho(true);
 						posicaoAtual++;
 					}
@@ -511,7 +514,8 @@ public class TelaPrincipal extends JApplet {
 					int posicaoAtual = 0;
 					Vertice[] vetorCaminho = (Vertice[]) caminho.toArray(new Vertice[caminho.size()]);
 					while((posicaoAtual<vetorCaminho.length-1)) {
-						if(vetorCaminho[posicaoAtual].getIndice().equals(l.getNomePonto1()) && vetorCaminho[posicaoAtual+1].getIndice().equals(l.getNomePonto2()))
+						if(vetorCaminho[posicaoAtual].getIndice().equals(l.getNomePonto1()) && vetorCaminho[posicaoAtual+1].getIndice().equals(l.getNomePonto2()) 
+								|| vetorCaminho[posicaoAtual].getIndice().equals(l.getNomePonto2()) && vetorCaminho[posicaoAtual+1].getIndice().equals(l.getNomePonto1()))
 							l.setParteDoMenorCaminho(true);
 						posicaoAtual++;
 					}
