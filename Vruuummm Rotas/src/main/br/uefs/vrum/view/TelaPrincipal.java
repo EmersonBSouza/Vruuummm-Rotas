@@ -437,6 +437,30 @@ public class TelaPrincipal extends JApplet {
 			repaint();
 		}
 	}
+	
+	public void definirCaminho() {
+		List<Vertice> menorCaminho = new ArrayList<>();
+		List<Vertice> caminho = (List<Vertice>) cBmenoresCaminhosPonto.getSelectedItem();
+		List<Vertice> caminho2 = (List<Vertice>) cBmenoresCaminhosBanco.getSelectedItem();
+		menorCaminho.addAll(caminho);
+		menorCaminho.addAll(caminho2);
+
+		for(Linha l : linhas)
+			l.setParteDoMenorCaminho(false);
+
+		for(Linha l : linhas) {
+			for(int x = 0; x < menorCaminho.size() ; x++) {
+				int posicaoAtual = 0;
+				Vertice[] vetorCaminho = (Vertice[]) menorCaminho.toArray(new Vertice[menorCaminho.size()]);
+				while((posicaoAtual<vetorCaminho.length-1)) {
+					if(vetorCaminho[posicaoAtual].getIndice().equals(l.getNomePonto1()) && vetorCaminho[posicaoAtual+1].getIndice().equals(l.getNomePonto2()) 
+							|| vetorCaminho[posicaoAtual].getIndice().equals(l.getNomePonto2()) && vetorCaminho[posicaoAtual+1].getIndice().equals(l.getNomePonto1()))
+						l.setParteDoMenorCaminho(true);
+					posicaoAtual++;
+				}
+			}
+		}
+	}
 
 	public class CalcularMenorCaminhoAction implements ActionListener {
 
@@ -484,20 +508,10 @@ public class TelaPrincipal extends JApplet {
 			else if(menoresCaminhosBanco.size() == 0)
 				JOptionPane.showMessageDialog(null, "Impossível chegar ao Banco a partir do Ponto de Coleta");
 
-			caminho.addAll(menoresCaminhosBanco.get(0));
-
-			for(Linha l : linhas) {
-				for(Vertice v : caminho) {
-					int posicaoAtual = 0;
-					Vertice[] vetorMenorCaminho = (Vertice[]) caminho.toArray(new Vertice[caminho.size()]);
-					while((posicaoAtual<vetorMenorCaminho.length-1)) {
-						if(vetorMenorCaminho[posicaoAtual].getIndice().equals(l.getNomePonto1()) && vetorMenorCaminho[posicaoAtual+1].getIndice().equals(l.getNomePonto2()) 
-							|| vetorMenorCaminho[posicaoAtual].getIndice().equals(l.getNomePonto2()) && vetorMenorCaminho[posicaoAtual+1].getIndice().equals(l.getNomePonto1()))
-							l.setParteDoMenorCaminho(true);
-						posicaoAtual++;
-					}
-				}
-			}
+			cBmenoresCaminhosBanco.setSelectedItem(0);
+			cBmenoresCaminhosPonto.setSelectedItem(0);
+			
+			definirCaminho();
 			repaint();
 		}
 	}
@@ -506,27 +520,7 @@ public class TelaPrincipal extends JApplet {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			List<Vertice> menorCaminho = new ArrayList<>();
-			List<Vertice> caminho = (List<Vertice>) cBmenoresCaminhosPonto.getSelectedItem();
-			List<Vertice> caminho2 = (List<Vertice>) cBmenoresCaminhosBanco.getSelectedItem();
-			menorCaminho.addAll(caminho);
-			menorCaminho.addAll(caminho2);
-
-			for(Linha l : linhas)
-				l.setParteDoMenorCaminho(false);
-
-			for(Linha l : linhas) {
-				for(int x = 0; x < menorCaminho.size() ; x++) {
-					int posicaoAtual = 0;
-					Vertice[] vetorCaminho = (Vertice[]) menorCaminho.toArray(new Vertice[menorCaminho.size()]);
-					while((posicaoAtual<vetorCaminho.length-1)) {
-						if(vetorCaminho[posicaoAtual].getIndice().equals(l.getNomePonto1()) && vetorCaminho[posicaoAtual+1].getIndice().equals(l.getNomePonto2()) 
-								|| vetorCaminho[posicaoAtual].getIndice().equals(l.getNomePonto2()) && vetorCaminho[posicaoAtual+1].getIndice().equals(l.getNomePonto1()))
-							l.setParteDoMenorCaminho(true);
-						posicaoAtual++;
-					}
-				}
-			}
+			definirCaminho();
 			repaint();
 		}
 	}
